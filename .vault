@@ -1,0 +1,8 @@
+{
+  "envFile": ".environment",
+  "pattern": {
+    "begin": "# BEGIN VAULT",
+    "end": "# END VAULT"
+  },
+  "data": ""
+}
