@@ -1,0 +1,40 @@
+---
+volumes:
+  api-db-data:
+  redis-data:
+
+
+services:
+  apidb:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: jsautodb
+    ports:
+      - "55555:5432"
+    environment:
+      POSTGRES_USER: jsauto
+      POSTGRES_PASSWORD: jsauto
+      POSTGRES_DB: jsautodb
+    volumes:
+      - api-db-data:/var/lib/postgresql
+  redis:
+    image: docker.io/redis/redis-stack:7.2.0-v9
+    container_name: jsautoredis
+    ports:
+      - '7777:6379' # c'est le redis
+      - '7000:8001' # c'est le dashboard
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'redis-cli -a $$REDIS_PASSWORD ping | grep PONG'
+        ]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - redis-data:/data
+    environment:
+      REDIS_PASSWORD: jsauto
+      REDIS_ARGS: '--requirepass jsauto --appendonly yes --save 60 1 --loglevel warning'
