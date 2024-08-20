@@ -20,6 +20,11 @@ function calculateHighwayConsumption(urbanConsumption, combinedConsumption) {
   return `${Math.ceil(highwayConsumption * 10) / 10} L/100Km`
 }
 
+function extractCylinder(inputString) {
+  const match = inputString?.toString().match(/\d\.\d/)
+  return match ? match[0] : null
+}
+
 function displacementToCylinder(displacement) {
   const nbDisp = Number(displacement)
 
@@ -39,27 +44,6 @@ function displacementToCylinder(displacement) {
     return `0.${final.toString().charAt(0)}`
   }
 }
-
-// function createTitle(car, model) {
-//   let title = model
-
-//   if (car.production_start_year) {
-//     title += ` ${car.production_start_year}`
-//   }
-//   if (car.engine_name && car.engine_name !== '') {
-//     title += ` ${car.engine_name}`
-//   } else if (car.displacement) {
-//     title += ` ${displacementToCylinder(car.displacement)}`
-//   }
-//   if (car.hp && car.hp !== 0) {
-//     title += ` ${car.hp}`
-//   }
-//   if (car.torque && car.torque !== 0) {
-//     title += ` ${car.torque}`
-//   }
-
-//   return title.trim().toUpperCase().replace(/\s+/g, ' ')
-// }
 
 sequelize.transaction(async transaction => {
   const updateDate = new Date().toISOString()
@@ -95,7 +79,9 @@ sequelize.transaction(async transaction => {
           car.engine_detail || null,
           car.engine_type || null,
           car.displacement || null,
-          car.displacement ? displacementToCylinder(car.displacement) : null,
+          car.displacement
+            ? displacementToCylinder(car.displacement)
+            : extractCylinder(car.engine_name),
           car.body || null,
           car.fuel || null,
           car.hp || null,
