@@ -5,10 +5,10 @@ export const configurationSchema = Joi.object({
   port: Joi.number(),
   baseUrl: Joi.string().uri().required(),
   isWorkerMode: Joi.boolean().required(),
-  authorizedApiKeys: Joi.array()
-    .items(Joi.string().required())
-    .min(1)
-    .required(),
+  authorizedApiKeys: Joi.object({
+    user: Joi.array().items(Joi.string().required()).min(1).required(),
+    admin: Joi.array().items(Joi.string().required()).min(1).required()
+  }),
   cors: Joi.object({
     allowedOrigins: Joi.array().items(Joi.string())
   }),

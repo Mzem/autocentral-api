@@ -50,7 +50,10 @@ export const testConfig = (): ConfigService => {
     cors: {
       allowedOrigins: []
     },
-    authorizedApiKeys: ['test-api-key'],
+    authorizedApiKeys: {
+      user: ['test-api-key'],
+      admin: ['test-api-key-admin']
+    },
     database: {
       url: 'postgresql://jsauto:jsauto@localhost:55555/jsautodb'
     }

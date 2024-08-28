@@ -1,15 +1,20 @@
+import { Failure, failure } from './result'
+
 export interface DomainError {
   readonly code: string
   readonly message: string
-  readonly reason?: string
 }
 
-export class NonTrouveError implements DomainError {
-  static CODE = 'NON_TROUVE'
-  readonly code: string = NonTrouveError.CODE
+export class NotFoundError implements DomainError {
+  static CODE = 'NOT_FOUND'
+  readonly code: string = NotFoundError.CODE
   readonly message: string
 
-  constructor(entityType: string, critereRecherche = '') {
-    this.message = `${entityType} ${critereRecherche} non trouvé(e)`
+  constructor(entity: string, identifier?: string) {
+    this.message = `${entity}${identifier ? ' ' + identifier : ''} not found`
   }
+}
+
+export function NotFoundFailure(entity: string, identifier?: string): Failure {
+  return failure(new NotFoundError(entity, identifier))
 }

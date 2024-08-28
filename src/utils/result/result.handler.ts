@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common'
-import { NonTrouveError } from './error'
+import { NotFoundError } from './error'
 import { Failure, isFailure, Result } from './result'
 import { RuntimeException } from '@nestjs/core/errors/exceptions/runtime.exception'
 
@@ -16,7 +16,7 @@ export function handleResult<R, T>(
 
 function handleFailure(result: Failure): never {
   switch (result.error.code) {
-    case NonTrouveError.CODE:
+    case NotFoundError.CODE:
       throw new NotFoundException(result.error.message)
     default:
       throw new RuntimeException(result.error.message)

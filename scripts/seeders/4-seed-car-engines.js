@@ -94,8 +94,14 @@ sequelize.transaction(async transaction => {
           mappedCar.make_id,
           mappedCar.model,
           mappedCar.type || null,
-          mappedCar.from_year,
-          mappedCar.to_year,
+          mappedCar.from_year === 'unknown' &&
+          mappedCar.from_year === mappedCar.to_year
+            ? 'All'
+            : mappedCar.from_year,
+          mappedCar.to_year === 'unknown' &&
+          mappedCar.from_year === mappedCar.to_year
+            ? 'All'
+            : mappedCar.to_year,
           mappedCar.engine_name,
           mappedCar.cylinder,
           mappedCar.fuel,

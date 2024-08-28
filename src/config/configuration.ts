@@ -21,9 +21,14 @@ export default () => {
         ? JSON.parse(process.env.CORS_ALLOWED_ORIGINS)
         : []
     },
-    authorizedApiKeys: process.env.AUTHORIZED_API_KEYS
-      ? JSON.parse(process.env.AUTHORIZED_API_KEYS)
-      : [],
+    authorizedApiKeys: {
+      user: process.env.AUTHORIZED_USER_API_KEYS
+        ? JSON.parse(process.env.AUTHORIZED_USER_API_KEYS)
+        : [],
+      admin: process.env.AUTHORIZED_ADMIN_API_KEYS
+        ? JSON.parse(process.env.AUTHORIZED_ADMIN_API_KEYS)
+        : []
+    },
     database: {
       host,
       port,

@@ -6,6 +6,12 @@ import { configureLoggerModule } from './utils/monitoring/logger.module'
 import { AppController } from './controllers/app.controller'
 import { ApiKeyAuthGuard } from './utils/auth/api-key.auth-guard'
 import { databaseProviders } from './infrastructure/sequelize/providers'
+import { GetCarMakesQueryHandler } from './application/queries/get-car-makes.query.handler.db'
+import { GetCarModelsNamesQueryHandler } from './application/queries/get-car-models-names.query.handler.db'
+import { CarModelsController } from './controllers/car-models.controller'
+import { CarMakesController } from './controllers/car-makes.controller'
+import { GetCarModelListQueryHandler } from './application/queries/get-car-model-list.query.handler.db'
+import { GetCarModelDetailQueryHandler } from './application/queries/get-car-model-detail.query.handler.db'
 
 @Module({
   imports: [
@@ -17,8 +23,15 @@ import { databaseProviders } from './infrastructure/sequelize/providers'
     TerminusModule,
     configureLoggerModule()
   ],
-  controllers: [AppController],
-  providers: [ApiKeyAuthGuard, ...databaseProviders],
+  controllers: [CarMakesController, CarModelsController, AppController],
+  providers: [
+    ApiKeyAuthGuard,
+    ...databaseProviders,
+    GetCarMakesQueryHandler,
+    GetCarModelsNamesQueryHandler,
+    GetCarModelListQueryHandler,
+    GetCarModelDetailQueryHandler
+  ],
   exports: [...databaseProviders]
 })
 export class AppModule {}
