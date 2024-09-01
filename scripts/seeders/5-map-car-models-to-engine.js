@@ -22,7 +22,21 @@ async function addDataToJson(filePath, newData) {
   await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf8')
 }
 function intervalsIntersect(start1, end1, start2, end2) {
-  return (start1 <= end2 && end1 > start2) || (start2 < end1 && end2 >= start1)
+  if (start1 > end1 || start2 > end2) return false
+
+  if (start1 == end1) {
+    if (end1 == start2) return true
+    if (start1 == end2) return true
+  }
+  if (start2 == end2) {
+    if (end2 == start1) return true
+    if (start2 == end1) return true
+  }
+  if (end1 <= start2) return false
+  if (end2 <= start1) return false
+
+  return true
+  //return (start1 <= end2 && end1 > start2) || (start2 < end1 && end2 >= start1)
 }
 
 const databaseUrl = process.env.DATABASE_URL
@@ -86,8 +100,8 @@ sequelize.transaction(async transaction => {
               matchingModel.model
           )
           const isAllModelYears =
-            carEngine.from_year.toLowerCase() === 'unknown' &&
-            carEngine.to_year.toLowerCase() === 'unknown'
+            carEngine.from_year.toLowerCase() === 'all' &&
+            carEngine.to_year.toLowerCase() === 'all'
 
           const coeffMarge = isAllModelYears
             ? 3
@@ -128,10 +142,10 @@ sequelize.transaction(async transaction => {
           const startYearModel = matchingModel.from_year
 
           const endYearEngine =
-            carEngine.to_year === 'Present' ? 2100 : Number(carEngine.to_year)
+            carEngine.to_year === 'present' ? 2100 : Number(carEngine.to_year)
 
           const endYearModel =
-            matchingModel.to_year === 'Present'
+            matchingModel.to_year === 'present'
               ? 2100
               : Number(matchingModel.to_year)
 
@@ -211,7 +225,7 @@ sequelize.transaction(async transaction => {
         countMatchedEngines++
         for (const model of potentialModels) {
           await sequelize.query(
-            `INSERT INTO car_engine_model_association (car_engine_id, car_model_id) VALUES (?, ?)  ON CONFLICT (car_engine_id, car_model_id) DO NOTHING`,
+            `INSERT INTO car_engine_model_association (car_engine_id, car_model_id) VALUES (?, ?) ON CONFLICT (car_engine_id, car_model_id) DO NOTHING`,
             {
               replacements: [carEngine.id, model.id],
               transaction

@@ -1,19 +1,15 @@
-export function mapEngineYears(
-  fromYear: string | null,
-  toYear: string | null
-): string {
+export function mapEngineYears(fromYear: string, toYear: string): string {
   let years = ''
-  if (fromYear === 'All' || toYear === 'All') {
-    years = 'All'
+  if (fromYear === 'all' || toYear === 'all') {
+    years = 'all'
   } else {
-    if (fromYear === 'unknown' || !fromYear) {
+    if (fromYear === 'unknown') {
       years += '...'
     } else {
       years += fromYear
     }
-    if (toYear === 'Present') {
-      years += ' > ...'
-    } else if (toYear === 'unknown' || !toYear) {
+
+    if (toYear === 'present' || toYear === 'unknown') {
       years += ' > ...'
     } else {
       years += ` > ${toYear}`

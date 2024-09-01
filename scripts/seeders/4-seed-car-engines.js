@@ -36,8 +36,12 @@ sequelize.transaction(async transaction => {
         .replace(/ /g, '-'),
       model: car.model,
       type: car.type,
-      from_year: car.production_start_year.toLowerCase(),
-      to_year: car.production_end_year.toLowerCase(),
+      from_year: car.production_start_year
+        ? car.production_start_year.toString().toLowerCase()
+        : 'unknown',
+      to_year: car.production_end_year
+        ? car.production_end_year.toString().toLowerCase()
+        : 'unknown',
       engine_name: car.engine_name,
       cylinder: extractCylinder(car.engine_name),
       fuel: car.fuel,
@@ -94,13 +98,11 @@ sequelize.transaction(async transaction => {
           mappedCar.make_id,
           mappedCar.model,
           mappedCar.type || null,
-          mappedCar.from_year === 'unknown' &&
-          mappedCar.from_year === mappedCar.to_year
-            ? 'All'
+          mappedCar.from_year === 'unknown' && mappedCar.to_year === 'unknown'
+            ? 'all'
             : mappedCar.from_year,
-          mappedCar.to_year === 'unknown' &&
-          mappedCar.from_year === mappedCar.to_year
-            ? 'All'
+          mappedCar.from_year === 'unknown' && mappedCar.to_year === 'unknown'
+            ? 'all'
             : mappedCar.to_year,
           mappedCar.engine_name,
           mappedCar.cylinder,

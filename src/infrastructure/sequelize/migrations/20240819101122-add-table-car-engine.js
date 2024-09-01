@@ -31,12 +31,12 @@ module.exports = {
             // 2016
             from_year: {
               type: Sequelize.STRING(7),
-              allowNull: true
+              allowNull: false
             },
             // 2020
             to_year: {
               type: Sequelize.STRING(7),
-              allowNull: true
+              allowNull: false
             },
             engine_name: {
               type: Sequelize.STRING(100),
@@ -90,19 +90,6 @@ module.exports = {
           },
           { transaction }
         )
-        await queryInterface.addColumn(
-          'car_model',
-          'id_car_engine',
-          {
-            type: Sequelize.STRING(48),
-            allowNull: true,
-            references: {
-              model: 'car_engine',
-              key: 'id'
-            }
-          },
-          { transaction }
-        )
       }
     )
   },
@@ -111,9 +98,6 @@ module.exports = {
     await queryInterface.sequelize.transaction(
       { isolationLevel: Sequelize.Transaction.SERIALIZABLE },
       async transaction => {
-        await queryInterface.removeColumn('car_model', 'id_car_engine', {
-          transaction
-        })
         await queryInterface.dropTable('car_engine', { transaction })
       }
     )

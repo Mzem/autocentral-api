@@ -13,15 +13,10 @@ sequelize.transaction(async transaction => {
   for (const make of makes) {
     await sequelize.query(
       `INSERT INTO car_make 
-      (id, name, logo_url, info_url) 
-      VALUES (?, ?, ?, ?)`,
+      (id, name, category) 
+      VALUES (?, ?, ?)`,
       {
-        replacements: [
-          make.id,
-          make.name,
-          make.make_url ?? null,
-          make.make_logo_url ?? null
-        ],
+        replacements: [make.id, make.name, make.category ?? null],
         transaction
       }
     )

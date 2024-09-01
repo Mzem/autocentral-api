@@ -15,12 +15,8 @@ module.exports = {
               type: Sequelize.STRING(20),
               allowNull: false
             },
-            logo_url: {
-              type: Sequelize.STRING,
-              allowNull: true
-            },
-            info_url: {
-              type: Sequelize.STRING,
+            category: {
+              type: Sequelize.STRING(20),
               allowNull: true
             }
           },

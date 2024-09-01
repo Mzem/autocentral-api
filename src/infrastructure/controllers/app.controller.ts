@@ -5,7 +5,7 @@ import {
   ApiKeyAccessLevel,
   ApiKeyAuthGuard,
   METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL
-} from '../utils/auth/api-key.auth-guard'
+} from '../../utils/auth/api-key.auth-guard'
 import { ApiTags } from '@nestjs/swagger'
 
 @Controller()

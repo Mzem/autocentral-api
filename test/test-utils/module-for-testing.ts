@@ -6,7 +6,7 @@ import { TerminusModule } from '@nestjs/terminus'
 import { Test, TestingModuleBuilder } from '@nestjs/testing'
 import * as dotenv from 'dotenv'
 import { SinonSandbox, createSandbox } from 'sinon'
-import { AppController } from '../../src/controllers/app.controller'
+import { AppController } from '../../src/infrastructure/controllers/app.controller'
 dotenv.config({ path: '.environment' })
 
 export function buildTestingModuleForHttpTesting(

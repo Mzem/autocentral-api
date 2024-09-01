@@ -28,12 +28,12 @@ module.exports = {
             // 2016
             from_year: {
               type: Sequelize.STRING(4),
-              allowNull: true
+              allowNull: false
             },
             // 2020
             to_year: {
               type: Sequelize.STRING(7),
-              allowNull: true
+              allowNull: false
             },
             // 2016, 2017, 2018, 2019, 2020
             production_years: {

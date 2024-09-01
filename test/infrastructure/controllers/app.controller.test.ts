@@ -1,6 +1,6 @@
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
-import { getApplicationWithStubbedDependencies } from '../test-utils/module-for-testing'
+import { getApplicationWithStubbedDependencies } from '../../test-utils/module-for-testing'
 
 describe('AppController', () => {
   let app: INestApplication

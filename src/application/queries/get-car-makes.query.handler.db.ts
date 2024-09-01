@@ -11,8 +11,8 @@ export class CarMakeQueryModel {
   @ApiProperty()
   name: string
 
-  @ApiProperty()
-  logoUrl: string
+  @ApiProperty({ required: false })
+  category?: string
 }
 
 @Injectable()
@@ -27,13 +27,15 @@ export class GetCarMakesQueryHandler extends QueryHandler<
   async handle(): Promise<Result<CarMakeQueryModel[]>> {
     const sqlModels = await CarMakeSqlModel.findAll({ order: ['name'] })
     return success(
-      sqlModels.map(sql => {
-        return {
-          id: sql.id,
-          name: sql.name,
-          logoUrl: sql.logoUrl ?? ''
-        }
-      })
+      sqlModels
+        .filter(sql => sql.category)
+        .map(sql => {
+          return {
+            id: sql.id,
+            name: sql.name,
+            category: sql.category ?? undefined
+          }
+        })
     )
   }
 }

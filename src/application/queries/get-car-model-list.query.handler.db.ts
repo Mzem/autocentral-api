@@ -83,7 +83,7 @@ export class GetCarModelListQueryHandler extends QueryHandler<
       make: {
         id: makeSQL.id,
         name: makeSQL.name,
-        logoUrl: makeSQL.logoUrl ?? ''
+        category: makeSQL.category ?? undefined
       },
       modelName: query.modelName,
       modelList: modelsSQL.map(sql => {

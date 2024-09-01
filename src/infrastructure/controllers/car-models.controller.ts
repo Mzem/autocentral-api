@@ -4,20 +4,20 @@ import {
   ApiKeyAccessLevel,
   ApiKeyAuthGuard,
   METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL
-} from '../utils/auth/api-key.auth-guard'
-import { handleResult } from '../utils/result/result.handler'
+} from '../../utils/auth/api-key.auth-guard'
+import { handleResult } from '../../utils/result/result.handler'
 import {
   CarModelsNamesQueryModel,
   GetCarModelsNamesQueryHandler
-} from '../application/queries/get-car-models-names.query.handler.db'
+} from '../../application/queries/get-car-models-names.query.handler.db'
 import {
   CarModelListQueryModel,
   GetCarModelListQueryHandler
-} from '../application/queries/get-car-model-list.query.handler.db'
+} from '../../application/queries/get-car-model-list.query.handler.db'
 import {
   CarModelDetailQueryModel,
   GetCarModelDetailQueryHandler
-} from '../application/queries/get-car-model-detail.query.handler.db'
+} from '../../application/queries/get-car-model-detail.query.handler.db'
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity('api_key')

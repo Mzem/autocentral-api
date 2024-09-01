@@ -29,10 +29,10 @@ export class CarEngineDto extends Model {
   type: string | null
 
   @Column({ field: 'from_year', type: DataType.STRING })
-  fromYear: string | null
+  fromYear: string
 
   @Column({ field: 'to_year', type: DataType.STRING })
-  toYear: string | null
+  toYear: string
 
   @Column({ field: 'engine_name', type: DataType.STRING })
   engineName: string | null

@@ -110,7 +110,7 @@ export class GetCarModelDetailQueryHandler extends QueryHandler<
       make: {
         id: engineSQL.make!.id,
         name: engineSQL.make!.name,
-        logoUrl: engineSQL.make!.logoUrl ?? ''
+        category: engineSQL.make!.category ?? undefined
       },
       model: engineSQL.model,
       years: mapEngineYears(engineSQL.fromYear, engineSQL.toYear),

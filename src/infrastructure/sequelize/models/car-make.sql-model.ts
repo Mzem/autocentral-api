@@ -14,8 +14,8 @@ export class CarMakeDto extends Model {
   @Column({ field: 'name', type: DataType.STRING })
   name: string
 
-  @Column({ field: 'logo_url', type: DataType.STRING })
-  logoUrl: string | null
+  @Column({ field: 'category', type: DataType.STRING })
+  category: string | null
 }
 
 @Table({ timestamps: false, tableName: 'car_make' })
