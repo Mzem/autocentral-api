@@ -7,6 +7,7 @@ import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
 import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
+import { mapMakeSQLToQueryModel } from './mappers'
 
 export class CarModelsNamesQueryModel {
   @ApiProperty()
@@ -48,11 +49,7 @@ export class GetCarModelsNamesQueryHandler extends QueryHandler<
     })
 
     return success({
-      make: {
-        id: makeSQL.id,
-        name: makeSQL.name,
-        category: makeSQL.category ?? undefined
-      },
+      make: mapMakeSQLToQueryModel(makeSQL),
       models: modelsSQL.map(sql => sql.model)
     })
   }

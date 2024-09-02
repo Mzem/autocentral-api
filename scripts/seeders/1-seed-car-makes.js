@@ -13,10 +13,15 @@ sequelize.transaction(async transaction => {
   for (const make of makes) {
     await sequelize.query(
       `INSERT INTO car_make 
-      (id, name, category) 
-      VALUES (?, ?, ?)`,
+      (id, name, category, remap) 
+      VALUES (:id, :name, :category, :remap) ON CONFLICT (id) DO UPDATE SET category = :category, remap = :remap`,
       {
-        replacements: [make.id, make.name, make.category ?? null],
+        replacements: {
+          id: make.id,
+          name: make.name,
+          category: make.category ?? null,
+          remap: make.remap === undefined ? true : make.remap
+        },
         transaction
       }
     )

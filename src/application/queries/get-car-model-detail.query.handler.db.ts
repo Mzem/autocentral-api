@@ -6,7 +6,7 @@ import { NotFoundFailure } from '../../utils/result/error'
 import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
-import { mapEngineYears } from './mappers'
+import { mapEngineYears, mapMakeSQLToQueryModel } from './mappers'
 import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
 import { CarModelSqlModel } from '../../infrastructure/sequelize/models/car-model.sql-model'
 
@@ -107,11 +107,7 @@ export class GetCarModelDetailQueryHandler extends QueryHandler<
 
     return success({
       id: engineSQL.id,
-      make: {
-        id: engineSQL.make!.id,
-        name: engineSQL.make!.name,
-        category: engineSQL.make!.category ?? undefined
-      },
+      make: mapMakeSQLToQueryModel(engineSQL.make!),
       model: engineSQL.model,
       years: mapEngineYears(engineSQL.fromYear, engineSQL.toYear),
       type: engineSQL.type ?? undefined,

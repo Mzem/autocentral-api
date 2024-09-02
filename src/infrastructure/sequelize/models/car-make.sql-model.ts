@@ -16,6 +16,9 @@ export class CarMakeDto extends Model {
 
   @Column({ field: 'category', type: DataType.STRING })
   category: string | null
+
+  @Column({ field: 'remap', type: DataType.BOOLEAN })
+  remap: boolean
 }
 
 @Table({ timestamps: false, tableName: 'car_make' })

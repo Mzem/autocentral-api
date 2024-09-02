@@ -7,7 +7,7 @@ import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
 import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
-import { mapEngineYears } from './mappers'
+import { mapEngineYears, mapMakeSQLToQueryModel } from './mappers'
 
 class Engine {
   @ApiProperty()
@@ -45,7 +45,7 @@ export class CarModelListQueryModel {
   @ApiProperty()
   modelName: string
 
-  @ApiProperty()
+  @ApiProperty({ type: ModelListItem, isArray: true })
   modelList: ModelListItem[]
 }
 
@@ -80,11 +80,7 @@ export class GetCarModelListQueryHandler extends QueryHandler<
     })
 
     return success({
-      make: {
-        id: makeSQL.id,
-        name: makeSQL.name,
-        category: makeSQL.category ?? undefined
-      },
+      make: mapMakeSQLToQueryModel(makeSQL),
       modelName: query.modelName,
       modelList: modelsSQL.map(sql => {
         return {
