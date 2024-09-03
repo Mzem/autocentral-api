@@ -22,36 +22,30 @@ class Engine {
   fuel?: string
   @ApiProperty({ required: false })
   hp?: number
-  @ApiProperty({ required: false })
-  hpRemap?: number
-  @ApiProperty({ required: false })
-  torque?: number
-  @ApiProperty({ required: false })
-  torqueRemap?: number
-  @ApiProperty({ required: false })
-  urlSource?: string
+}
+class ModelYearsListItem {
+  @ApiProperty()
+  years: string
+  @ApiProperty({ type: Engine, isArray: true })
+  engines: Engine[]
 }
 class ModelListItem {
   @ApiProperty()
-  years: string
-  @ApiProperty()
-  engine: Engine
+  modelName: string
+  @ApiProperty({ type: ModelYearsListItem, isArray: true })
+  modelYears: ModelYearsListItem[]
 }
 
 export class CarModelListQueryModel {
   @ApiProperty()
   make: CarMakeQueryModel
 
-  @ApiProperty()
-  modelName: string
-
   @ApiProperty({ type: ModelListItem, isArray: true })
-  modelList: ModelListItem[]
+  models: ModelListItem[]
 }
 
 export interface GetCarModelListQuery extends Query {
   makeId: string
-  modelName: string
 }
 
 @Injectable()
@@ -74,31 +68,68 @@ export class GetCarModelListQueryHandler extends QueryHandler<
 
     const modelsSQL = await CarEngineSqlModel.findAll({
       where: {
-        makeId: query.makeId,
-        model: query.modelName
+        makeId: query.makeId
       }
     })
 
+    const groupedByModels: ModelListItem[] = modelsSQL.reduce(
+      (groupedModels: ModelListItem[], modelSQL: CarEngineSqlModel) => {
+        const currentModelName = modelSQL.model
+        const existingModelName = groupedModels.find(
+          model => model.modelName === currentModelName
+        )
+
+        const currentModelYears = mapEngineYears(
+          modelSQL.fromYear,
+          modelSQL.toYear
+        )
+
+        if (existingModelName) {
+          const existingModelYears = existingModelName.modelYears.find(
+            modelYears => modelYears.years === currentModelYears
+          )
+
+          if (existingModelYears) {
+            // If it exists, push the engine to the existing engines array
+            existingModelYears.engines.push(sqlToEngine(modelSQL))
+          } else {
+            // Otherwise, create a new entry in the accumulator
+            existingModelName.modelYears.push({
+              years: currentModelYears,
+              engines: [sqlToEngine(modelSQL)]
+            })
+          }
+        } else {
+          groupedModels.push({
+            modelName: currentModelName,
+            modelYears: [
+              {
+                years: currentModelYears,
+                engines: [sqlToEngine(modelSQL)]
+              }
+            ]
+          })
+        }
+
+        return groupedModels
+      },
+      []
+    )
+
     return success({
       make: mapMakeSQLToQueryModel(makeSQL),
-      modelName: query.modelName,
-      modelList: modelsSQL.map(sql => {
-        return {
-          years: mapEngineYears(sql.fromYear, sql.toYear),
-          engine: {
-            id: sql.id,
-            type: sql.type ?? undefined,
-            engineName: sql.engineName ?? undefined,
-            cylinder: sql.cylinder ?? undefined,
-            fuel: sql.fuel ?? undefined,
-            hp: sql.hp ?? undefined,
-            hpRemap: sql.hpRemap ?? undefined,
-            torque: sql.torque ?? undefined,
-            torqueRemap: sql.torqueRemap ?? undefined,
-            urlSource: sql.urlSource ?? undefined
-          }
-        }
-      })
+      models: groupedByModels
     })
+  }
+}
+
+function sqlToEngine(modelSQL: CarEngineSqlModel): Engine {
+  return {
+    id: modelSQL.id,
+    type: modelSQL.type ?? undefined,
+    engineName: modelSQL.engineName ?? undefined,
+    cylinder: modelSQL.cylinder ?? undefined,
+    fuel: modelSQL.fuel ?? undefined,
+    hp: modelSQL.hp ?? undefined
   }
 }

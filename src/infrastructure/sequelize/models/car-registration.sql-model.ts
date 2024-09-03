@@ -1,68 +1,58 @@
 import {
-  BelongsTo,
   Column,
   DataType,
-  ForeignKey,
   Model,
   PrimaryKey,
   Table
 } from 'sequelize-typescript'
-import { CarModelSqlModel } from './car-model.sql-model'
 
 export class CarRegistrationDto extends Model {
   @PrimaryKey
   @Column({ field: 'id' })
   id: string
 
-  @ForeignKey(() => CarModelSqlModel)
-  @Column({ field: 'id_car_model', type: DataType.STRING })
-  idCarModel: string
-
-  @Column({ field: 'manufacturer', type: DataType.STRING })
-  make: string
+  @Column({ field: 'make', type: DataType.STRING })
+  make: string | null
 
   @Column({ field: 'model', type: DataType.STRING })
-  model: string
+  model: string | null
 
   @Column({ field: 'model', type: DataType.STRING })
-  variant: string
+  variant: string | null
 
   @Column({ field: 'registration', type: DataType.STRING })
-  registration: string
+  registration: string | null
 
   @Column({ field: 'registration_date', type: DataType.STRING })
-  registrationDate: string
+  registrationDate: string | null
 
   @Column({ field: 'type', type: DataType.STRING })
-  type: string
+  type: string | null
 
   @Column({ field: 'fuel', type: DataType.STRING })
-  fuel: string
+  fuel: string | null
 
   @Column({ field: 'fiscal_hp', type: DataType.STRING })
-  fiscalHP: string
+  fiscalHp: string | null
 
   @Column({ field: 'cylinder', type: DataType.STRING })
-  cylinder: string
+  cylinder: string | null
 
   @Column({ field: 'vin', type: DataType.STRING })
-  vin: string
+  vin: string | null
 
   @Column({ field: 'engine', type: DataType.STRING })
-  engine: string
+  engine: string | null
 
   @Column({ field: 'transmission', type: DataType.STRING })
-  transmission: string
+  transmission: string | null
 
   @Column({ field: 'gearbox_code', type: DataType.STRING })
-  gearboxCode: string
+  gearboxCode: string | null
 
   @Column({ field: 'constructor_type', type: DataType.STRING })
-  constructorType: string
+  constructorType: string | null
 }
 
 @Table({ timestamps: false, tableName: 'car_registration' })
-export class CarRegistrationSqlModel extends CarRegistrationDto {
-  @BelongsTo(() => CarModelSqlModel)
-  carModel: CarModelSqlModel
-}
+export class CarRegistrationSqlModel extends CarRegistrationDto {}

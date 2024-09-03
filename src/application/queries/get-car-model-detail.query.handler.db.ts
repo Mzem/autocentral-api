@@ -14,6 +14,9 @@ class RelatedModel {
   @ApiProperty()
   id: string
 
+  @ApiProperty()
+  model: string
+
   @ApiProperty({ required: false })
   productionYears?: string
 
@@ -21,7 +24,19 @@ class RelatedModel {
   engineDetail?: string
 
   @ApiProperty({ required: false })
+  engineType?: string
+
+  @ApiProperty({ required: false })
+  cylinder?: string
+
+  @ApiProperty({ required: false })
   body?: string
+
+  @ApiProperty({ required: false })
+  hp?: string
+
+  @ApiProperty({ required: false })
+  torque?: string
 
   @ApiProperty({ required: false })
   acceleration?: number
@@ -31,6 +46,24 @@ class RelatedModel {
 
   @ApiProperty({ required: false })
   fuelSystem?: string
+
+  @ApiProperty({ required: false })
+  driveType?: string
+
+  @ApiProperty({ required: false })
+  gearbox?: string
+
+  @ApiProperty({ required: false })
+  weight?: string
+
+  @ApiProperty({ required: false })
+  height?: string
+
+  @ApiProperty({ required: false })
+  length?: string
+
+  @ApiProperty({ required: false })
+  width?: string
 
   @ApiProperty({ required: false })
   fuelHighway?: string
@@ -121,11 +154,22 @@ export class GetCarModelDetailQueryHandler extends QueryHandler<
       urlSource: engineSQL.urlSource ?? undefined,
       relatedModels: engineSQL.models.map(model => ({
         id: model.id,
-        productionYears: model.productionYears ?? undefined,
+        productionYears: mapEngineYears(model.fromYear, model.toYear),
+        model: model.model,
         engineDetail: model.engineDetail ?? undefined,
+        cylinder: model.cylinder ?? undefined,
         body: model.body ?? undefined,
+        hp: model.hp?.toString() ?? undefined,
+        torque: model.torque?.toString() ?? undefined,
         acceleration: model.acceleration ?? undefined,
         topSpeed: model.topSpeed ?? undefined,
+        engineType: model.engineType ?? undefined,
+        driveType: model.driveType ?? undefined,
+        gearbox: model.gearbox ?? undefined,
+        weight: model.weight ?? undefined,
+        height: model.height ?? undefined,
+        width: model.width ?? undefined,
+        length: model.length ?? undefined,
         fuelSystem: model.fuelSystem ?? undefined,
         fuelHighway: model.fuelHighway ?? undefined,
         fuelUrban: model.fuelUrban ?? undefined,

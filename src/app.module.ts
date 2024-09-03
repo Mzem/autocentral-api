@@ -7,11 +7,12 @@ import { AppController } from './infrastructure/controllers/app.controller'
 import { ApiKeyAuthGuard } from './utils/auth/api-key.auth-guard'
 import { databaseProviders } from './infrastructure/sequelize/providers'
 import { GetCarMakesQueryHandler } from './application/queries/get-car-makes.query.handler.db'
-import { GetCarModelsNamesQueryHandler } from './application/queries/get-car-models-names.query.handler.db'
 import { CarModelsController } from './infrastructure/controllers/car-models.controller'
 import { CarMakesController } from './infrastructure/controllers/car-makes.controller'
 import { GetCarModelListQueryHandler } from './application/queries/get-car-model-list.query.handler.db'
 import { GetCarModelDetailQueryHandler } from './application/queries/get-car-model-detail.query.handler.db'
+import { GetCarRegQueryHandler } from './application/queries/get-car-reg.query.handler.db'
+import { CarRegsController } from './infrastructure/controllers/car-regs.controller'
 
 @Module({
   imports: [
@@ -23,14 +24,19 @@ import { GetCarModelDetailQueryHandler } from './application/queries/get-car-mod
     TerminusModule,
     configureLoggerModule()
   ],
-  controllers: [CarMakesController, CarModelsController, AppController],
+  controllers: [
+    CarRegsController,
+    CarMakesController,
+    CarModelsController,
+    AppController
+  ],
   providers: [
     ApiKeyAuthGuard,
     ...databaseProviders,
     GetCarMakesQueryHandler,
-    GetCarModelsNamesQueryHandler,
     GetCarModelListQueryHandler,
-    GetCarModelDetailQueryHandler
+    GetCarModelDetailQueryHandler,
+    GetCarRegQueryHandler
   ],
   exports: [...databaseProviders]
 })

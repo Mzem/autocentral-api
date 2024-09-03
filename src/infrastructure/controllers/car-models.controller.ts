@@ -1,23 +1,19 @@
 import { Controller, Get, Param, SetMetadata, UseGuards } from '@nestjs/common'
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger'
 import {
-  ApiKeyAccessLevel,
-  ApiKeyAuthGuard,
-  METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL
-} from '../../utils/auth/api-key.auth-guard'
-import { handleResult } from '../../utils/result/result.handler'
-import {
-  CarModelsNamesQueryModel,
-  GetCarModelsNamesQueryHandler
-} from '../../application/queries/get-car-models-names.query.handler.db'
+  CarModelDetailQueryModel,
+  GetCarModelDetailQueryHandler
+} from '../../application/queries/get-car-model-detail.query.handler.db'
 import {
   CarModelListQueryModel,
   GetCarModelListQueryHandler
 } from '../../application/queries/get-car-model-list.query.handler.db'
 import {
-  CarModelDetailQueryModel,
-  GetCarModelDetailQueryHandler
-} from '../../application/queries/get-car-model-detail.query.handler.db'
+  ApiKeyAccessLevel,
+  ApiKeyAuthGuard,
+  METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL
+} from '../../utils/auth/api-key.auth-guard'
+import { handleResult } from '../../utils/result/result.handler'
 
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity('api_key')
@@ -25,35 +21,20 @@ import {
 @ApiTags('Car Models')
 export class CarModelsController {
   constructor(
-    private readonly getCarModelNamesHandler: GetCarModelsNamesQueryHandler,
     private readonly getCarModelListQueryHandler: GetCarModelListQueryHandler,
     private readonly getCarModelDetailQueryHandler: GetCarModelDetailQueryHandler
   ) {}
 
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
-  @Get('/makes/:makeId')
-  @ApiResponse({
-    type: CarModelsNamesQueryModel
-  })
-  async getCarModelNames(
-    @Param('makeId') makeId: string
-  ): Promise<CarModelsNamesQueryModel> {
-    const result = await this.getCarModelNamesHandler.execute({ makeId })
-    return handleResult(result)
-  }
-
-  @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
-  @Get('/makes/:makeId/models/:modelName')
+  @Get('/makes/:makeId/models')
   @ApiResponse({
     type: CarModelListQueryModel
   })
   async getCarModelList(
-    @Param('makeId') makeId: string,
-    @Param('modelName') modelName: string
+    @Param('makeId') makeId: string
   ): Promise<CarModelListQueryModel> {
     const result = await this.getCarModelListQueryHandler.execute({
-      makeId,
-      modelName
+      makeId
     })
     return handleResult(result)
   }
