@@ -13,6 +13,8 @@ import { GetCarModelListQueryHandler } from './application/queries/get-car-model
 import { GetCarModelDetailQueryHandler } from './application/queries/get-car-model-detail.query.handler.db'
 import { GetCarRegQueryHandler } from './application/queries/get-car-reg.query.handler.db'
 import { CarRegsController } from './infrastructure/controllers/car-regs.controller'
+import { GetPostCarRegQueryHandler } from './application/queries/get-post-car-reg.query.handler.db'
+import { GetPostCarRegNullQueryHandler } from './application/queries/get-post-car-reg-null.query.handler.db'
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { CarRegsController } from './infrastructure/controllers/car-regs.control
     GetCarMakesQueryHandler,
     GetCarModelListQueryHandler,
     GetCarModelDetailQueryHandler,
-    GetCarRegQueryHandler
+    GetCarRegQueryHandler,
+    GetPostCarRegQueryHandler,
+    GetPostCarRegNullQueryHandler
   ],
   exports: [...databaseProviders]
 })
