@@ -27,6 +27,9 @@ export default () => {
         : [],
       admin: process.env.AUTHORIZED_ADMIN_API_KEYS
         ? JSON.parse(process.env.AUTHORIZED_ADMIN_API_KEYS)
+        : [],
+      script: process.env.AUTHORIZED_SCRIPT_API_KEYS
+        ? JSON.parse(process.env.AUTHORIZED_SCRIPT_API_KEYS)
         : []
     },
     database: {

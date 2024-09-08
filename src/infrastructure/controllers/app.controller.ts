@@ -40,4 +40,14 @@ export class AppController {
   async getApiKeyAdmin(): Promise<string> {
     return '👌'
   }
+
+  @UseGuards(ApiKeyAuthGuard)
+  @SetMetadata(
+    METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL,
+    ApiKeyAccessLevel.SCRIPT
+  )
+  @Get('api-key-script')
+  async getApiKeyScript(): Promise<string> {
+    return '👌'
+  }
 }

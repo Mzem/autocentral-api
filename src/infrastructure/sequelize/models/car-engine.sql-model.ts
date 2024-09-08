@@ -15,7 +15,7 @@ import { CarEngineModelAssociationSqlModel } from './car-engine-model-associatio
 
 export class CarEngineDto extends Model {
   @PrimaryKey
-  @Column({ field: 'id' })
+  @Column({ field: 'id', type: DataType.STRING })
   id: string
 
   @ForeignKey(() => CarMakeSqlModel)

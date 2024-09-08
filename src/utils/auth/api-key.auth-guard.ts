@@ -11,7 +11,8 @@ import { Request } from 'express'
 export const METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL = 'API_KEY_LEVEL'
 export enum ApiKeyAccessLevel {
   USER = 'USER',
-  ADMIN = 'ADMIN'
+  ADMIN = 'ADMIN',
+  SCRIPT = 'SCRIPT'
 }
 
 @Injectable()
@@ -45,6 +46,11 @@ export class ApiKeyAuthGuard implements CanActivate {
         break
       case ApiKeyAccessLevel.ADMIN:
         authorizedApiKeys = this.configService.get('authorizedApiKeys.admin')
+        break
+      case ApiKeyAccessLevel.SCRIPT:
+        authorizedApiKeys = this.configService
+          .get('authorizedApiKeys.script')
+          .concat(this.configService.get('authorizedApiKeys.admin'))
         break
     }
 

@@ -12,7 +12,7 @@ import { Fuel } from '../../../domain/car-model'
 
 export class CarModelDto extends Model {
   @PrimaryKey
-  @Column({ field: 'id' })
+  @Column({ field: 'id', type: DataType.STRING })
   id: string
 
   @ForeignKey(() => CarMakeSqlModel)

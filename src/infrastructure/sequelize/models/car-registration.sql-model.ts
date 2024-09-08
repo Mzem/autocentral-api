@@ -3,13 +3,18 @@ import {
   DataType,
   Model,
   PrimaryKey,
-  Table
+  Table,
+  Unique
 } from 'sequelize-typescript'
 
 export class CarRegistrationDto extends Model {
   @PrimaryKey
-  @Column({ field: 'id' })
+  @Column({ field: 'id', type: DataType.STRING })
   id: string
+
+  @Unique
+  @Column({ field: 'registration', type: DataType.STRING })
+  registration: string
 
   @Column({ field: 'make', type: DataType.STRING })
   make: string | null
@@ -20,9 +25,6 @@ export class CarRegistrationDto extends Model {
   @Column({ field: 'model', type: DataType.STRING })
   variant: string | null
 
-  @Column({ field: 'registration', type: DataType.STRING })
-  registration: string | null
-
   @Column({ field: 'registration_date', type: DataType.STRING })
   registrationDate: string | null
 
@@ -32,8 +34,8 @@ export class CarRegistrationDto extends Model {
   @Column({ field: 'fuel', type: DataType.STRING })
   fuel: string | null
 
-  @Column({ field: 'fiscal_hp', type: DataType.STRING })
-  fiscalHp: string | null
+  @Column({ field: 'cv', type: DataType.STRING })
+  cv: string | null
 
   @Column({ field: 'cylinder', type: DataType.STRING })
   cylinder: string | null

@@ -5,6 +5,8 @@
 
 .environment
 certs/
+scrap.js
+tmp
 
 # User-specific stuff:
 .idea/**/workspace.xml

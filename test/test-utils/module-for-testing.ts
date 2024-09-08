@@ -52,7 +52,8 @@ export const testConfig = (): ConfigService => {
     },
     authorizedApiKeys: {
       user: ['test-api-key'],
-      admin: ['test-api-key-admin']
+      admin: ['test-api-key-admin'],
+      script: ['test-api-key-script']
     },
     database: {
       url: 'postgresql://jsauto:jsauto@localhost:55555/jsautodb'

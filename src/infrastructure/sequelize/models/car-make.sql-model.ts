@@ -8,7 +8,7 @@ import {
 
 export class CarMakeDto extends Model {
   @PrimaryKey
-  @Column({ field: 'id' })
+  @Column({ field: 'id', type: DataType.STRING })
   id: string
 
   @Column({ field: 'name', type: DataType.STRING })

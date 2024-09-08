@@ -102,6 +102,72 @@ describe(`ApiKeyAuthGuard`, () => {
       expect(response.body).to.be.deep.equal(errorInvalidAPIKey)
     })
   })
+  describe('header X-API-KEY + valid key (SCRIPT)', () => {
+    let response: supertest.Response
+    it('retourne 200 status code', async () => {
+      // When
+      const apiKey: string = testConfig().get<string[]>(
+        'authorizedApiKeys.script'
+      )![0]
+      response = await request(app.getHttpServer())
+        .get('/api-key-script')
+        .set('X-API-KEY', apiKey)
+
+      //Then
+      expect(response).to.have.property('statusCode').to.equal(200)
+    })
+  })
+
+  describe('header X-API-KEY + invalid key', () => {
+    let response: supertest.Response
+    it('retourne 401 status code', async () => {
+      // When
+      const apiKey: string = testConfig().get<string[]>(
+        'authorizedApiKeys.script'
+      )![0]
+      response = await request(app.getHttpServer())
+        .get('/api-key-admin')
+        .set('X-API-KEY', apiKey)
+
+      //Then
+      expect(response).to.have.property('statusCode').to.equal(401)
+      expect(response.body).to.be.deep.equal(errorInvalidAPIKey)
+    })
+  })
+
+  describe('header X-API-KEY + invalid key', () => {
+    let response: supertest.Response
+    it('retourne 401 status code', async () => {
+      // When
+      const apiKey: string = testConfig().get<string[]>(
+        'authorizedApiKeys.user'
+      )![0]
+      response = await request(app.getHttpServer())
+        .get('/api-key-script')
+        .set('X-API-KEY', apiKey)
+
+      //Then
+      expect(response).to.have.property('statusCode').to.equal(401)
+      expect(response.body).to.be.deep.equal(errorInvalidAPIKey)
+    })
+  })
+
+  describe('header X-API-KEY + invalid key', () => {
+    let response: supertest.Response
+    it('retourne 401 status code', async () => {
+      // When
+      const apiKey: string = testConfig().get<string[]>(
+        'authorizedApiKeys.user'
+      )![0]
+      response = await request(app.getHttpServer())
+        .get('/api-key-admin')
+        .set('X-API-KEY', apiKey)
+
+      //Then
+      expect(response).to.have.property('statusCode').to.equal(401)
+      expect(response.body).to.be.deep.equal(errorInvalidAPIKey)
+    })
+  })
 
   describe('header X-API-KEY + invalid key', () => {
     let response: supertest.Response

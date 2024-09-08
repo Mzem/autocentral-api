@@ -11,6 +11,11 @@ module.exports = {
               type: Sequelize.STRING,
               allowNull: false
             },
+            registration: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              unique: true
+            },
             make: {
               type: Sequelize.STRING,
               allowNull: true
@@ -22,11 +27,6 @@ module.exports = {
             variant: {
               type: Sequelize.STRING,
               allowNull: true
-            },
-            registration: {
-              type: Sequelize.STRING,
-              allowNull: true,
-              unique: true
             },
             registrationDate: {
               field: 'registration_date',
@@ -41,8 +41,7 @@ module.exports = {
               type: Sequelize.STRING,
               allowNull: true
             },
-            fiscalHP: {
-              field: 'fiscal_hp',
+            cv: {
               type: Sequelize.STRING,
               allowNull: true
             },

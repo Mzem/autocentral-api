@@ -7,7 +7,8 @@ export const configurationSchema = Joi.object({
   isWorkerMode: Joi.boolean().required(),
   authorizedApiKeys: Joi.object({
     user: Joi.array().items(Joi.string().required()).min(1).required(),
-    admin: Joi.array().items(Joi.string().required()).min(1).required()
+    admin: Joi.array().items(Joi.string().required()).min(1).required(),
+    script: Joi.array().items(Joi.string().required()).min(1).required()
   }),
   cors: Joi.object({
     allowedOrigins: Joi.array().items(Joi.string())
