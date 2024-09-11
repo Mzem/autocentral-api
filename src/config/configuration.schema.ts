@@ -24,5 +24,12 @@ export const configurationSchema = Joi.object({
     idleConnections: Joi.number().required(),
     maxConnections: Joi.number().required(),
     minConnections: Joi.number().required()
-  }).required()
+  }).required(),
+  scrapers: Joi.object({
+    regsScraper: Joi.object({
+      siteUrl: Joi.string().required(),
+      captchaKey: Joi.string().required(),
+      apiKey: Joi.string().required()
+    })
+  })
 })

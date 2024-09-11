@@ -16,6 +16,8 @@ import { CarRegsController } from './infrastructure/controllers/car-regs.control
 import { GetPostCarRegQueryHandler } from './application/queries/scrap-regs/get-post-car-reg.query.handler.db'
 import { GetPostCarRegNullQueryHandler } from './application/queries/scrap-regs/get-post-car-reg-null.query.handler.db'
 import { GetMissingRSCarRegsQueryHandler } from './application/queries/scrap-regs/get-missing-car-regs.query.handler.db'
+import { RegsScaper } from './infrastructure/scrapers/regs.scraper'
+import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports: [
@@ -23,6 +25,9 @@ import { GetMissingRSCarRegsQueryHandler } from './application/queries/scrap-reg
       envFilePath: '.environment',
       cache: true,
       load: [configuration]
+    }),
+    HttpModule.register({
+      timeout: 10000
     }),
     TerminusModule,
     configureLoggerModule()
@@ -42,7 +47,8 @@ import { GetMissingRSCarRegsQueryHandler } from './application/queries/scrap-reg
     FindCarRegQueryHandler,
     GetPostCarRegQueryHandler,
     GetPostCarRegNullQueryHandler,
-    GetMissingRSCarRegsQueryHandler
+    GetMissingRSCarRegsQueryHandler,
+    RegsScaper
   ],
   exports: [...databaseProviders]
 })

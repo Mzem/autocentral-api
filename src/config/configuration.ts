@@ -43,6 +43,13 @@ export default () => {
       idleConnections: process.env.DATABASE_IDLE_CONNECTIONS || 10000,
       maxConnections: process.env.DATABASE_MAX_CONNECTIONS || 10,
       minConnections: process.env.DATABASE_MIN_CONNECTIONS || 1
+    },
+    scrapers: {
+      regsScraper: {
+        siteUrl: process.env.REGS_SCRAPER_SITE_URL,
+        captchaKey: process.env.REGS_SCRAPER_CAPTCHA_KEY,
+        apiKey: process.env.REGS_SCRAPER_API_KEY
+      }
     }
   }
 

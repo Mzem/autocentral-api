@@ -5,7 +5,7 @@
 
 .environment
 certs/
-scrap.js
+scrap
 tmp
 
 # User-specific stuff:
