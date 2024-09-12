@@ -31,10 +31,10 @@ export class GetPostCarRegQueryHandler extends QueryHandler<
         where: { registration: sanitizeStringForDBInsert(reg) }
       })
 
-      if (!regSQL) {
+      if (!regSQL && car.registration && car.manufacturer) {
         const dto: AsSql<CarRegistrationDto> = {
           id: uuid.v4(),
-          registration: sanitizeStringForDBInsert(reg)!,
+          registration: sanitizeStringForDBInsert(car.registration)!,
           make: sanitizeStringForDBInsert(car.manufacturer),
           model: sanitizeStringForDBInsert(car.model),
           variant: sanitizeStringForDBInsert(car.bodyType),
@@ -49,7 +49,9 @@ export class GetPostCarRegQueryHandler extends QueryHandler<
           gearboxCode: sanitizeStringForDBInsert(car.gearboxCode),
           constructorType: sanitizeStringForDBInsert(car.constructorType)
         }
-        await CarRegistrationSqlModel.upsert(dto)
+        await CarRegistrationSqlModel.upsert(dto, {
+          conflictFields: ['registration']
+        })
       }
     } catch (e) {
       this.logger.error(buildError('Error save car REG', e))
