@@ -43,7 +43,8 @@ export class GetPostCarRegNullQueryHandler extends QueryHandler<
           engine: null,
           transmission: null,
           gearboxCode: null,
-          constructorType: null
+          constructorType: null,
+          updateDate: null
         }
         await CarRegistrationSqlModel.upsert(dto)
       }

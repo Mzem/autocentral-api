@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
+import * as uuid from 'uuid'
+import { RegsScaper } from '../../infrastructure/scrapers/regs.scraper'
 import { CarRegistrationSqlModel } from '../../infrastructure/sequelize/models/car-registration.sql-model'
+import { AsSql } from '../../infrastructure/sequelize/types'
 import { NotFoundFailure } from '../../utils/result/error'
 import { Result, success } from '../../utils/result/result'
+import { sanitizeStringForDBInsert } from '../../utils/utils'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
-import { RegsScaper } from '../../infrastructure/scrapers/regs.scraper'
-import { AsSql } from '../../infrastructure/sequelize/types'
-import * as uuid from 'uuid'
-import { sanitizeStringForDBInsert } from '../../utils/utils'
 
 export class CarRegQueryModel {
   @ApiProperty()
@@ -85,7 +85,8 @@ export class FindCarRegQueryHandler extends QueryHandler<
         transmission: sanitizeStringForDBInsert(scrappedReg.transmission),
         gearboxCode: sanitizeStringForDBInsert(scrappedReg.gearboxCode),
         constructorType: sanitizeStringForDBInsert(scrappedReg.constructorType),
-        type: sanitizeStringForDBInsert(scrappedReg.type)
+        type: sanitizeStringForDBInsert(scrappedReg.type),
+        updateDate: null
       }
       await CarRegistrationSqlModel.upsert(carRegDto, {
         conflictFields: ['registration']

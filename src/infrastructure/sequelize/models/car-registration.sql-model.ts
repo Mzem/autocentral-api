@@ -54,6 +54,9 @@ export class CarRegistrationDto extends Model {
 
   @Column({ field: 'constructor_type', type: DataType.STRING })
   constructorType: string | null
+
+  @Column({ field: 'update_date', type: DataType.DATE })
+  updateDate: Date | null
 }
 
 @Table({ timestamps: false, tableName: 'car_registration' })

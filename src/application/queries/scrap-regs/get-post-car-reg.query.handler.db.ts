@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
+import * as uuid from 'uuid'
 import {
   CarRegistrationDto,
   CarRegistrationSqlModel
 } from '../../../infrastructure/sequelize/models/car-registration.sql-model'
-import { emptySuccess, Result } from '../../../utils/result/result'
-import { QueryHandler } from '../../types/query-handler'
-import { buildError } from '../../../utils/monitoring/logger.module'
-import * as uuid from 'uuid'
 import { AsSql } from '../../../infrastructure/sequelize/types'
+import { buildError } from '../../../utils/monitoring/logger.module'
+import { emptySuccess, Result } from '../../../utils/result/result'
 import { sanitizeStringForDBInsert } from '../../../utils/utils'
+import { QueryHandler } from '../../types/query-handler'
 
 @Injectable()
 // TODO passer en command
@@ -47,7 +47,8 @@ export class GetPostCarRegQueryHandler extends QueryHandler<
           engine: sanitizeStringForDBInsert(car.engine),
           transmission: sanitizeStringForDBInsert(car.transmission),
           gearboxCode: sanitizeStringForDBInsert(car.gearboxCode),
-          constructorType: sanitizeStringForDBInsert(car.constructorType)
+          constructorType: sanitizeStringForDBInsert(car.constructorType),
+          updateDate: null
         }
         await CarRegistrationSqlModel.upsert(dto, {
           conflictFields: ['registration']
