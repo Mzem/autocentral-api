@@ -1,0 +1,541 @@
+[
+  {
+    "id": "ac",
+    "name": "AC"
+  },
+  {
+    "id": "acura",
+    "name": "Acura",
+    "category": "other",
+    "remap": false
+  },
+  {
+    "id": "alfa-romeo",
+    "name": "Alfa Romeo",
+    "category": "common"
+  },
+  {
+    "id": "alpina",
+    "name": "Alpina",
+    "category": "performance"
+  },
+  {
+    "id": "alpine",
+    "name": "Alpine",
+    "category": "performance"
+  },
+  {
+    "id": "ariel-motors",
+    "name": "Ariel Motors"
+  },
+  {
+    "id": "artega",
+    "name": "Artega"
+  },
+  {
+    "id": "aston-martin",
+    "name": "Aston Martin",
+    "category": "performance"
+  },
+  {
+    "id": "piaggio",
+    "name": "Piaggio"
+  },
+  {
+    "id": "audi",
+    "name": "Audi",
+    "category": "common"
+  },
+  {
+    "id": "aurus",
+    "name": "Aurus"
+  },
+  {
+    "id": "bentley",
+    "name": "Bentley",
+    "category": "performance"
+  },
+  {
+    "id": "bmw",
+    "name": "BMW",
+    "category": "common"
+  },
+  {
+    "id": "byd",
+    "name": "BYD",
+    "category": "asian"
+  },
+  {
+    "id": "haval",
+    "name": "Haval",
+    "category": "asian",
+    "remap": false
+  },
+  {
+    "id": "borgward",
+    "name": "Borgward"
+  },
+  {
+    "id": "bristol",
+    "name": "Bristol"
+  },
+  {
+    "id": "bufori",
+    "name": "Bufori"
+  },
+  {
+    "id": "bugatti",
+    "name": "Bugatti",
+    "category": "performance"
+  },
+  {
+    "id": "buick",
+    "name": "Buick",
+    "category": "other"
+  },
+  {
+    "id": "cadillac",
+    "name": "Cadillac",
+    "category": "other"
+  },
+  {
+    "id": "caterham",
+    "name": "Caterham"
+  },
+  {
+    "id": "chevrolet",
+    "name": "Chevrolet",
+    "category": "common"
+  },
+  {
+    "id": "chrysler",
+    "name": "Chrysler",
+    "category": "other"
+  },
+  {
+    "id": "citroen",
+    "name": "Citroen",
+    "category": "common"
+  },
+  {
+    "id": "cupra",
+    "name": "Cupra",
+    "category": "common"
+  },
+  {
+    "id": "dacia",
+    "name": "Dacia",
+    "category": "common"
+  },
+  {
+    "id": "daewoo",
+    "name": "Daewoo"
+  },
+  {
+    "id": "daihatsu",
+    "name": "Daihatsu"
+  },
+  {
+    "id": "dmc",
+    "name": "DMC"
+  },
+  {
+    "id": "dodge",
+    "name": "Dodge",
+    "category": "common"
+  },
+  {
+    "id": "ds-automobiles",
+    "name": "DS-Automobiles",
+    "category": "common"
+  },
+  {
+    "id": "ferrari",
+    "name": "Ferrari",
+    "category": "performance"
+  },
+  {
+    "id": "fiat",
+    "name": "Fiat",
+    "category": "common"
+  },
+  {
+    "id": "fisker",
+    "name": "Fisker"
+  },
+  {
+    "id": "ford",
+    "name": "Ford",
+    "category": "common"
+  },
+  {
+    "id": "genesis",
+    "name": "Genesis",
+    "category": "other",
+    "remap": false
+  },
+  {
+    "id": "gmc",
+    "name": "GMC",
+    "category": "other",
+    "remap": false
+  },
+  {
+    "id": "gwm",
+    "name": "GWM",
+    "category": "asian"
+  },
+  {
+    "id": "geely",
+    "name": "Geely",
+    "category": "asian"
+  },
+  {
+    "id": "holden",
+    "name": "Holden"
+  },
+  {
+    "id": "honda",
+    "name": "Honda",
+    "category": "common"
+  },
+  {
+    "id": "hyundai",
+    "name": "Hyundai",
+    "category": "common"
+  },
+  {
+    "id": "infiniti",
+    "name": "Infiniti",
+    "category": "other"
+  },
+  {
+    "id": "ineos",
+    "name": "Ineos"
+  },
+  {
+    "id": "isuzu",
+    "name": "Isuzu",
+    "category": "common"
+  },
+  {
+    "id": "jaguar",
+    "name": "Jaguar",
+    "category": "common"
+  },
+  {
+    "id": "jac",
+    "name": "JAC"
+  },
+  {
+    "id": "jeep",
+    "name": "Jeep",
+    "category": "common"
+  },
+  {
+    "id": "kia",
+    "name": "Kia",
+    "category": "common"
+  },
+  {
+    "id": "koenigsegg",
+    "name": "Koenigsegg",
+    "category": "performance",
+    "remap": false
+  },
+  {
+    "id": "ktm",
+    "name": "KTM"
+  },
+  {
+    "id": "lada",
+    "name": "Lada",
+    "category": "common",
+    "remap": false
+  },
+  {
+    "id": "lamborghini",
+    "name": "Lamborghini",
+    "category": "performance"
+  },
+  {
+    "id": "lancia",
+    "name": "Lancia",
+    "category": "common"
+  },
+  {
+    "id": "land-rover",
+    "name": "Land Rover",
+    "category": "common"
+  },
+  {
+    "id": "lexus",
+    "name": "Lexus",
+    "category": "common"
+  },
+  {
+    "id": "lightyear",
+    "name": "Lightyear"
+  },
+  {
+    "id": "lincoln",
+    "name": "Lincoln",
+    "category": "other"
+  },
+  {
+    "id": "lotus",
+    "name": "Lotus",
+    "category": "performance"
+  },
+  {
+    "id": "maserati",
+    "name": "Maserati",
+    "category": "performance"
+  },
+  {
+    "id": "maybach",
+    "name": "Maybach",
+    "category": "performance",
+    "remap": false
+  },
+  {
+    "id": "mazda",
+    "name": "Mazda",
+    "category": "common"
+  },
+  {
+    "id": "mclaren",
+    "name": "McLaren",
+    "category": "performance"
+  },
+  {
+    "id": "mercedes",
+    "name": "Mercedes",
+    "category": "common"
+  },
+  {
+    "id": "mercury",
+    "name": "Mercury",
+    "category": "other",
+    "remap": false
+  },
+  {
+    "id": "mg",
+    "name": "MG",
+    "category": "common"
+  },
+  {
+    "id": "mini",
+    "name": "Mini",
+    "category": "common"
+  },
+  {
+    "id": "mpm",
+    "name": "MPM"
+  },
+  {
+    "id": "mitsubishi",
+    "name": "Mitsubishi",
+    "category": "common"
+  },
+  {
+    "id": "morgan",
+    "name": "Morgan"
+  },
+  {
+    "id": "nio",
+    "name": "Nio"
+  },
+  {
+    "id": "pgo",
+    "name": "PGO"
+  },
+  {
+    "id": "nissan",
+    "name": "Nissan",
+    "category": "common"
+  },
+  {
+    "id": "oldsmobile",
+    "name": "Oldsmobile"
+  },
+  {
+    "id": "opel",
+    "name": "Opel",
+    "category": "common"
+  },
+  {
+    "id": "pagani",
+    "name": "Pagani",
+    "category": "performance"
+  },
+  {
+    "id": "perodua",
+    "name": "Perodua"
+  },
+  {
+    "id": "peugeot",
+    "name": "Peugeot",
+    "category": "common"
+  },
+  {
+    "id": "pininfarina",
+    "name": "Pininfarina"
+  },
+  {
+    "id": "polestar",
+    "name": "Polestar",
+    "category": "other",
+    "remap": false
+  },
+  {
+    "id": "pontiac",
+    "name": "Pontiac",
+    "category": "other",
+    "remap": "false"
+  },
+  {
+    "id": "porsche",
+    "name": "Porsche",
+    "category": "common"
+  },
+  {
+    "id": "proton",
+    "name": "Proton"
+  },
+  {
+    "id": "qoros",
+    "name": "Qoros"
+  },
+  {
+    "id": "mahindra",
+    "name": "Mahindra",
+    "category": "asian"
+  },
+  {
+    "id": "renault",
+    "name": "Renault",
+    "category": "common"
+  },
+  {
+    "id": "rimac",
+    "name": "Rimac",
+    "category": "performance",
+    "remap": false
+  },
+  {
+    "id": "rivian",
+    "name": "Rivian"
+  },
+  {
+    "id": "rolls-royce",
+    "name": "Rolls-Royce",
+    "category": "performance"
+  },
+  {
+    "id": "saab",
+    "name": "Saab",
+    "category": "other"
+  },
+  {
+    "id": "saturn",
+    "name": "Saturn"
+  },
+  {
+    "id": "samsung",
+    "name": "Samsung"
+  },
+  {
+    "id": "scion",
+    "name": "Scion"
+  },
+  {
+    "id": "secma",
+    "name": "Secma"
+  },
+  {
+    "id": "seat",
+    "name": "Seat",
+    "category": "common"
+  },
+  {
+    "id": "skoda",
+    "name": "Skoda",
+    "category": "common"
+  },
+  {
+    "id": "smart",
+    "name": "Smart",
+    "category": "common"
+  },
+  {
+    "id": "spyker",
+    "name": "Spyker"
+  },
+  {
+    "id": "ssang-yong",
+    "name": "SsangYong",
+    "category": "asian"
+  },
+  {
+    "id": "subaru",
+    "name": "Subaru",
+    "category": "other"
+  },
+  {
+    "id": "suzuki",
+    "name": "Suzuki",
+    "category": "common"
+  },
+  {
+    "id": "tata",
+    "name": "Tata",
+    "category": "asian"
+  },
+  {
+    "id": "tesla",
+    "name": "Tesla",
+    "category": "other"
+  },
+  {
+    "id": "toyota",
+    "name": "Toyota",
+    "category": "common"
+  },
+  {
+    "id": "vauxhall",
+    "name": "Vauxhall"
+  },
+  {
+    "id": "volkswagen",
+    "name": "Volkswagen",
+    "category": "common"
+  },
+  {
+    "id": "volvo",
+    "name": "Volvo",
+    "category": "common"
+  },
+  {
+    "id": "chery",
+    "name": "Chery",
+    "category": "asian",
+    "remap": false
+  },
+  {
+    "id": "wiesmann",
+    "name": "Wiesmann"
+  },
+  {
+    "id": "westfield",
+    "name": "Westfield"
+  },
+  {
+    "id": "man",
+    "name": "MAN"
+  },
+  {
+    "id": "zenvo",
+    "name": "Zenvo"
+  }
+]
