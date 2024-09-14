@@ -18,10 +18,10 @@
     "start:redis:db": "docker compose up -d redis",
     "start": "nest start",
     "watch": "yarn start:pg:db && yarn start:redis:db && nest start --watch | npx pino-pretty",
-    "watch:worker": "yarn start:pg:db && yarn start:redis:db && IS_WORKER=true nest start --watch | npx pino-pretty",
+    "watch:worker": "yarn start:pg:db && yarn start:redis:db && WORKER_MODE=true nest start --watch | npx pino-pretty",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "start:prod:worker": "=IS_WORKER=true node dist/main",
+    "start:prod:worker": "=WORKER_MODE=true node dist/main",
     "start:db": "docker compose up -d",
     "test:local": "yarn start:db && DATABASE_URL=postgresql://jsauto:jsauto@localhost:55555/jsautodb mocha 'test/**/*.test.ts' --exit --timeout 10000",
     "cover": "nyc yarn test:local",
@@ -32,9 +32,10 @@
     "release:patch": "scripts/release-version.sh patch",
     "release:minor": "scripts/release-version.sh minor",
     "release:major": "scripts/release-version.sh major",
-    "tasks:init-jobs": "TASK_NAME=INIT_JOBS node dist/main",
+    "tasks:init-crons": "TASK_NAME=INIT_CRONS node dist/main",
     "tasks:dummy-job": "TASK_NAME=DUMMY_JOB node dist/main",
-    "tasks:clean-job": "TASK_NAME=CLEAN_JOBS node dist/main"
+    "tasks:clean-job": "TASK_NAME=CLEAN_JOBS node dist/main",
+    "tasks:scrap-brperf": "TASK_NAME=SCRAP_BRPERF node dist/main"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.2",
@@ -57,6 +58,7 @@
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.2",
     "bull": "4.16.3",
+    "cheerio": "^1.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "compression": "1.7.4",
