@@ -30,7 +30,7 @@ import {
   JobPlannerRepositoryToken,
   JobPlannerService
 } from './domain/job-planner'
-import { JobPlannerRedisRepository } from './infrastructure/repositories/job-planner-redis.repository.db'
+import { JobPlannerRepository } from './infrastructure/repositories/job-planner.repository.db'
 import { DateService } from './utils/date.service'
 import { TaskService } from './application/task.service'
 import { WorkerService } from './application/worker.service.db'
@@ -38,6 +38,10 @@ import { CleanJobsJobHandler } from './application/jobs/clean-jobs.job.handler'
 import { InitCronsCommandHandler } from './application/tasks/init-crons'
 import { PlanCronExecutionCommandHandler } from './application/tasks/plan-cron-execution'
 import { UpdateCarEnginesJobHandler } from './application/jobs/update-car-engines.job.handler'
+import { ScrapBRPerfJobHandler } from './application/jobs/scraps/scrap-brperf.job.handler'
+import { FirebaseClient } from './infrastructure/clients/firebase-client'
+import { ScraperRepository } from './infrastructure/repositories/scraper.repository.'
+import { ScraperRepositoryToken } from './domain/scraper'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -64,10 +68,15 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
     WorkerService,
     TaskService,
     DateService,
+    FirebaseClient,
     ApiKeyAuthGuard,
     {
       provide: JobPlannerRepositoryToken,
-      useClass: JobPlannerRedisRepository
+      useClass: JobPlannerRepository
+    },
+    {
+      provide: ScraperRepositoryToken,
+      useClass: ScraperRepository
     },
     ...databaseProviders
   ],
@@ -96,7 +105,8 @@ export function buildJobHandlerProviders(): Provider[] {
 export const JobHandlerProviders = [
   FakeJobHandler,
   CleanJobsJobHandler,
-  UpdateCarEnginesJobHandler
+  UpdateCarEnginesJobHandler,
+  ScrapBRPerfJobHandler
 ]
 
 @Module(buildModuleMetadata())

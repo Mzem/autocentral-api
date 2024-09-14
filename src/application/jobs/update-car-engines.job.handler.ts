@@ -7,17 +7,12 @@ import { Job } from '../types/job'
 @Injectable()
 @ProcessJobType(JobPlanner.JobType.UPDATE_CAR_ENGINES)
 export class UpdateCarEnginesJobHandler extends JobHandler<Job> {
-  constructor(
-    private readonly carEngineRepository: Car,
-    private dateService: DateService
-  ) {
+  constructor(private dateService: DateService) {
     super(JobPlanner.JobType.UPDATE_CAR_ENGINES)
   }
 
   async handle(): Promise<JobPlanner.Stats> {
     const now = this.dateService.now()
-
-    const engines = this.carEngineRepository.getCarEngines()
 
     return {
       jobType: this.jobType,

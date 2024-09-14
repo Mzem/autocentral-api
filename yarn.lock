@@ -1819,6 +1819,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/multer@npm:^1.4.12":
+  version: 1.4.12
+  resolution: "@types/multer@npm:1.4.12"
+  dependencies:
+    "@types/express": "npm:*"
+  checksum: 10/3d2b32da58ddd67f972d4ef1021492f78d65f33f936b6fb25dd461bb6cc7b03bfd1de1a11562c4310680dac8054e4398038db51767a0ffbf1fe62457b3706e95
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 22.5.4
   resolution: "@types/node@npm:22.5.4"
@@ -6853,6 +6862,7 @@ __metadata:
     "@types/express": "npm:^4.17.21"
     "@types/luxon": "npm:^3.4.2"
     "@types/mocha": "npm:^10.0.6"
+    "@types/multer": "npm:^1.4.12"
     "@types/node": "npm:^20.11.16"
     "@types/pg": "npm:^8"
     "@types/pino-multi-stream": "npm:^5.1.6"

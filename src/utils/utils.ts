@@ -20,3 +20,7 @@ export function sanitizeStringForDBInsert(
 
   return sanitized.trim()
 }
+
+export function bufferToJson<T>(buffer: Buffer): T {
+  return JSON.parse(buffer.toString())
+}

@@ -35,7 +35,8 @@ export namespace JobPlanner {
   export enum JobType {
     FAKE = 'FAKE',
     CLEAN_JOBS = 'CLEAN_JOBS',
-    UPDATE_CAR_ENGINES = 'UPDATE_CAR_ENGINES'
+    UPDATE_CAR_ENGINES = 'UPDATE_CAR_ENGINES',
+    SCRAP_BRPERF = 'SCRAP_BRPERF'
   }
 
   export interface JobFake {
@@ -82,6 +83,11 @@ export const cronJobList: JobPlanner.CronJob[] = [
     type: JobPlanner.JobType.UPDATE_CAR_ENGINES,
     expression: '0 2 * * *',
     description: 'Daily 02:00'
+  },
+  {
+    type: JobPlanner.JobType.SCRAP_BRPERF,
+    expression: '0 0 * * *',
+    description: 'Daily 00:00'
   }
 ]
 

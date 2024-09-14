@@ -8,7 +8,7 @@ import { DateTime, Duration } from 'luxon'
 const CRON_TIMEZONE = 'Europe/Paris'
 
 @Injectable()
-export class JobPlannerRedisRepository implements JobPlanner.Repository {
+export class JobPlannerRepository implements JobPlanner.Repository {
   queue: Bull.Queue
   private isReady = false
   private logger: Logger
@@ -17,7 +17,7 @@ export class JobPlannerRedisRepository implements JobPlanner.Repository {
     private configService: ConfigService,
     private dateService: DateService
   ) {
-    this.logger = new Logger('JobPlannerRedisRepository')
+    this.logger = new Logger('JobPlannerRepository')
     this.queue = new QueueBull(
       'JobQueue',
       this.configService.get('redis').url,

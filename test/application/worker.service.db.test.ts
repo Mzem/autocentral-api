@@ -9,7 +9,7 @@ import {
   getDatabase
 } from '../test-utils/database-for-testing'
 import { INestApplication } from '@nestjs/common'
-import { JobPlannerRedisRepository } from '../../src/infrastructure/repositories/job-planner-redis.repository.db'
+import { JobPlannerRepository } from '../../src/infrastructure/repositories/job-planner.repository.db'
 import {
   JobPlanner,
   JobPlannerRepositoryToken
@@ -25,7 +25,7 @@ describe('WorkerService', () => {
   })
   let app: INestApplication
   let fakeJobHandler: FakeJobHandler
-  let jobPlannerRepository: JobPlannerRedisRepository
+  let jobPlannerRepository: JobPlannerRepository
   let workerService: WorkerService
   beforeEach(async () => {
     await database.cleanRedis()
