@@ -2,6 +2,7 @@ import * as Joi from 'joi'
 
 export const configurationSchema = Joi.object({
   environment: Joi.string().valid('prod', 'staging').required(),
+  isWorker: Joi.boolean().required(),
   port: Joi.number(),
   baseUrl: Joi.string().uri().required(),
   isWorkerMode: Joi.boolean().required(),
@@ -12,6 +13,9 @@ export const configurationSchema = Joi.object({
   }),
   cors: Joi.object({
     allowedOrigins: Joi.array().items(Joi.string())
+  }),
+  redis: Joi.object({
+    url: Joi.string().uri()
   }),
   database: Joi.object({
     host: Joi.string().required(),
@@ -31,5 +35,12 @@ export const configurationSchema = Joi.object({
       captchaKey: Joi.string().required(),
       apiKey: Joi.string().required()
     })
+  }),
+  headers: Joi.object({
+    maxAge: Joi.number()
+  }),
+  task: Joi.object({
+    name: Joi.string(),
+    date: Joi.string().isoDate()
   })
 })

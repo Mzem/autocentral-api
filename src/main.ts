@@ -8,13 +8,15 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 initializeAPMAgent()
 
 import * as compression from 'compression'
-import { useSwagger } from './utils/swagger/swagger.middleware'
+import { useSwagger } from './utils/middleware/swagger.middleware'
 import {
   BadRequestException,
   ValidationError,
   ValidationPipe
 } from '@nestjs/common'
 import helmet from 'helmet'
+import { WorkerService } from './application/worker.service.db'
+import { TaskService } from './application/task.service'
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -27,8 +29,14 @@ async function bootstrap(): Promise<void> {
   const logger = app.get(Logger)
   app.useLogger(logger)
 
-  if (task) {
+  if (task?.name) {
+    await app.get(TaskService).handle(task.name, task.date)
+    await app.close()
+    process.exit(0)
   } else if (isWorkerMode) {
+    logger.log('mode worker activated')
+    const worker = app.get(WorkerService)
+    worker.subscribe()
   } else {
     app.use(compression())
     useSwagger(appConfig, app)

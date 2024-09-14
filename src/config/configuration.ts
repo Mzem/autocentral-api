@@ -13,6 +13,7 @@ export default () => {
 
   const configuration: Configuration = {
     environment: process.env.ENVIRONMENT,
+    isWorker: process.env.IS_WORKER === 'true',
     port: process.env.PORT ? parseInt(process.env.PORT, 10) : 5555,
     baseUrl: process.env.BASE_URL,
     isWorkerMode: process.env.WORKER_MODE === 'true',
@@ -32,6 +33,9 @@ export default () => {
         ? JSON.parse(process.env.AUTHORIZED_SCRIPT_API_KEYS)
         : []
     },
+    redis: {
+      url: process.env.REDIS_URL
+    },
     database: {
       host,
       port,
@@ -50,6 +54,13 @@ export default () => {
         captchaKey: process.env.REGS_SCRAPER_CAPTCHA_KEY,
         apiKey: process.env.REGS_SCRAPER_API_KEY
       }
+    },
+    headers: {
+      maxAge: process.env.CACHE_CONTROL_MAX_AGE_SECONDS
+    },
+    task: {
+      name: process.env.TASK_NAME,
+      date: process.env.TASK_DATE
     }
   }
 

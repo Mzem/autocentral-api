@@ -21,11 +21,12 @@ export class GetMissingRSCarRegsQueryHandler extends QueryHandler<
 
   async handle(query: GetMissingRSCarRegsQuery): Promise<Success<string[]>> {
     const startingRSMat = query.startingRSMat ?? getRandomNumber(30000, 240000)
+    const nbRegs = query.nbRegsMax ?? 15
     const missingRegsRawSQL: Array<{ missing_reg: string }> =
       await this.sequelize.query(
         `WITH possible_regs AS (
       SELECT generate_series(${startingRSMat}, ${
-          startingRSMat + (query.nbRegsMax ?? 15)
+          startingRSMat + nbRegs
         }) AS reg_num
       )
       SELECT

@@ -9,4 +9,7 @@ export class DateService {
   nowJs(): Date {
     return new Date()
   }
+  static countExecutionTime(startDate: DateTime): number {
+    return startDate.diffNow().milliseconds * -1
+  }
 }
