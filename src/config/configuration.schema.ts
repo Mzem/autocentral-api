@@ -14,6 +14,9 @@ export const configurationSchema = Joi.object({
   cors: Joi.object({
     allowedOrigins: Joi.array().items(Joi.string())
   }),
+  firebase: Joi.object({
+    key: Joi.string().required()
+  }).required(),
   redis: Joi.object({
     url: Joi.string().uri()
   }),

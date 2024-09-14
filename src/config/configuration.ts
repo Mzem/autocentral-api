@@ -33,6 +33,9 @@ export default () => {
         ? JSON.parse(process.env.AUTHORIZED_SCRIPT_API_KEYS)
         : []
     },
+    firebase: {
+      key: process.env.FIREBASE_SECRET_KEY
+    },
     redis: {
       url: process.env.REDIS_URL
     },

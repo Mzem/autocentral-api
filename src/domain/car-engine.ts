@@ -4,23 +4,9 @@ import { DateService } from '../utils/date.service'
 
 export const JobPlannerRepositoryToken = 'JobPlannerRepositoryToken'
 
-export namespace JobPlanner {
+export namespace CarEngine {
   export interface Repository {
-    createJob<T>(job: Job<T>, jobId?: string, params?: JobParams): Promise<void>
-
-    createCronJob(cronJob: CronJob): Promise<void>
-
-    subscribe(callback: Handler<unknown>): Promise<void>
-
-    deleteJobs(): Promise<void>
-
-    deleteCronJobs(): Promise<void>
-
-    deleteOldJobs(): Promise<number>
-
-    deleteJobsWithPattern(pattern: string): Promise<void>
-
-    isRunning(jobType: JobPlanner.JobType): Promise<boolean>
+    getFromStorage
   }
 
   export interface JobParams {

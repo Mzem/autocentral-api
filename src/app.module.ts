@@ -37,6 +37,7 @@ import { WorkerService } from './application/worker.service.db'
 import { CleanJobsJobHandler } from './application/jobs/clean-jobs.job.handler'
 import { InitCronsCommandHandler } from './application/tasks/init-crons'
 import { PlanCronExecutionCommandHandler } from './application/tasks/plan-cron-execution'
+import { UpdateCarEnginesJobHandler } from './application/jobs/update-car-engines.job.handler'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -46,7 +47,7 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
       load: [configuration]
     }),
     HttpModule.register({
-      timeout: 10000
+      timeout: 5000
     }),
     TerminusModule,
     configureLoggerModule()
@@ -92,7 +93,11 @@ export function buildJobHandlerProviders(): Provider[] {
   return JobHandlerProviders
 }
 
-export const JobHandlerProviders = [FakeJobHandler, CleanJobsJobHandler]
+export const JobHandlerProviders = [
+  FakeJobHandler,
+  CleanJobsJobHandler,
+  UpdateCarEnginesJobHandler
+]
 
 @Module(buildModuleMetadata())
 export class AppModule implements NestModule {
