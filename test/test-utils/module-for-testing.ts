@@ -78,6 +78,9 @@ export const testConfig = (): ConfigService => {
       admin: ['test-api-key-admin'],
       script: ['test-api-key-script']
     },
+    firebase: {
+      key: '{"type": "service_account","project_id": "tnautos-test","private_key_id": "xx","private_key": "xx","client_email": "test@tnautos-test.iam.gserviceaccount.com","client_id": "xx","auth_uri": "https://accounts.google.com/o/oauth2/auth","token_uri": "https://oauth2.googleapis.com/token","auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test"}'
+    },
     redis: {
       // eslint-disable-next-line no-process-env
       url: process.env.REDIS_URL || 'redis://localhost:7773'

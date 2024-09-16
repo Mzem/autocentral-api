@@ -30,11 +30,13 @@ async function bootstrap(): Promise<void> {
   app.useLogger(logger)
 
   if (task?.name) {
+    app.flushLogs()
     await app.get(TaskService).handle(task.name, task.date)
     await app.close()
     process.exit(0)
   } else if (isWorkerMode) {
-    logger.log('mode worker activated')
+    app.flushLogs()
+    logger.log('Mode WORKER activated')
     const worker = app.get(WorkerService)
     worker.subscribe()
   } else {
@@ -56,6 +58,7 @@ async function bootstrap(): Promise<void> {
     )
     app.disable('x-powered-by')
     await app.listen(port)
+    logger.log('App listening on port ' + port)
   }
   app.flushLogs()
 }

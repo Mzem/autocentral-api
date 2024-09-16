@@ -21,7 +21,7 @@ export class UpdateCarEnginesJobHandler extends JobHandler<Job> {
     let error
 
     try {
-      const carEnginesBR = this.scraperRepository.get(
+      const _carEnginesBR = this.scraperRepository.get(
         Scraper.Category.CAR_ENGINE,
         Scraper.Site.BRPERF
       )
@@ -41,7 +41,7 @@ export class UpdateCarEnginesJobHandler extends JobHandler<Job> {
   }
 }
 
-function extractCylinder(inputString): string | null {
+function _extractCylinder(inputString: string): string | null {
   const match = inputString.toString().match(/\d\.\d/)
   return match ? match[0] : null
 }

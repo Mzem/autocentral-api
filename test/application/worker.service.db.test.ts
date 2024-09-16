@@ -16,6 +16,8 @@ import {
 } from '../../src/domain/job-planner'
 import { expect, stubClass } from '../test-utils'
 import { ConfigService } from '@nestjs/config'
+import { FirebaseClient } from '../../src/infrastructure/clients/firebase-client'
+import { FakeFirebaseClient } from '../fakes/fake-firebase-client'
 
 describe('WorkerService', () => {
   let database: DatabaseForTesting
@@ -36,6 +38,8 @@ describe('WorkerService', () => {
       .useValue(testConfig())
       .overrideProvider(FakeJobHandler)
       .useValue(fakeJobHandler)
+      .overrideProvider(FirebaseClient)
+      .useClass(FakeFirebaseClient)
       .compile()
 
     app = testingModule.createNestApplication()

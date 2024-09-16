@@ -10,6 +10,6 @@ export class DateService {
     return new Date()
   }
   static countExecutionTime(startDate: DateTime): number {
-    return startDate.diffNow().milliseconds * -1
+    return Math.abs(startDate.diffNow().milliseconds)
   }
 }
