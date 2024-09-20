@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize, QueryTypes } = require('sequelize')
 require('dotenv').config({ path: '../../.environment' })
 
 const fs = require('fs').promises
@@ -60,26 +60,24 @@ sequelize.transaction(async transaction => {
         carEngine.model
     )
 
-    const matchingModelsRaw = await sequelize.query(
+    const matchingModels = await sequelize.query(
       `SELECT * FROM car_model WHERE
         make_id = ? AND
-        fuel = ? AND
-        (SIMILARITY(model, ?) > 0.1 OR POSITION(? IN model) > 0 OR POSITION(model IN ?) > 0)
+        SIMILARITY(fuel::text, ?) > 0.4 AND
+        (SIMILARITY(model, ?) > 0.2 OR POSITION(? IN model) > 0 OR POSITION(model IN ?) > 0)
       `,
       {
         replacements: [
           carEngine.make_id,
           carEngine.fuel,
           carEngine.model,
-          // `%${carEngine.model}%`,
           carEngine.model,
           carEngine.model
         ],
+        type: QueryTypes.SELECT,
         transaction
       }
     )
-
-    const matchingModels = matchingModelsRaw[0]
 
     // const found = matchingModels.find(
     //   model => model.id === '25cca80b-3d98-4d2e-888c-37547d89a2df'
@@ -99,27 +97,15 @@ sequelize.transaction(async transaction => {
               ' ' +
               matchingModel.model
           )
-          const isAllModelYears =
-            carEngine.from_year.toLowerCase() === 'all' &&
-            carEngine.to_year.toLowerCase() === 'all'
-
-          const coeffMarge = isAllModelYears
-            ? 3
-            : carEngine.from_year.toLowerCase() === 'unknown'
-            ? 2
-            : 1
 
           if (matchingModel.hp && carEngine.hp) {
-            if (Math.abs(matchingModel.hp - carEngine.hp) > coeffMarge * 8) {
+            if (Math.abs(matchingModel.hp - carEngine.hp) > 10) {
               console.log('failing hp')
               return false
             }
           }
           if (matchingModel.torque && carEngine.torque) {
-            if (
-              Math.abs(matchingModel.torque - carEngine.torque) >
-              coeffMarge * 25
-            ) {
+            if (Math.abs(matchingModel.torque - carEngine.torque) > 25) {
               console.log('failing torque')
               return false
             }
@@ -135,43 +121,15 @@ sequelize.transaction(async transaction => {
             }
           }
 
-          const startYearEngine =
-            carEngine.from_year.toLowerCase() === 'unknown'
-              ? 1900
-              : carEngine.from_year
+          const startYearEngine = carEngine.from_year
           const startYearModel = matchingModel.from_year
+          const endYearModel = matchingModel.to_year
 
-          const endYearEngine =
-            carEngine.to_year === 'present' ? 2100 : Number(carEngine.to_year)
+          const isMatchingYears =
+            Math.abs(startYearEngine - startYearModel) <= 3 &&
+            startYearEngine <= endYearModel
 
-          const endYearModel =
-            matchingModel.to_year === 'present'
-              ? 2100
-              : Number(matchingModel.to_year)
-
-          const isMatchingYears = intervalsIntersect(
-            startYearEngine,
-            endYearEngine,
-            startYearModel,
-            endYearModel
-          )
-
-          console.log(
-            'start engine ' +
-              startYearEngine +
-              ' endYearEngine ' +
-              endYearEngine +
-              ' startYearModel ' +
-              startYearModel +
-              ' endYearModel ' +
-              endYearModel
-          )
-          console.log('allyears ' + isAllModelYears)
-          console.log('matching ' + isMatchingYears)
-
-          const yearsOkay = isAllModelYears || isMatchingYears
-
-          if (!yearsOkay) {
+          if (!isMatchingYears) {
             console.log('failing years')
             return false
           }

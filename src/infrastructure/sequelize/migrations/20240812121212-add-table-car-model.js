@@ -11,7 +11,6 @@ module.exports = {
               type: Sequelize.STRING(48),
               allowNull: false
             },
-            // mercedes
             make_id: {
               type: Sequelize.STRING(100),
               allowNull: false,
@@ -20,22 +19,18 @@ module.exports = {
                 key: 'id'
               }
             },
-            // E class W213 E200
             model: {
               type: Sequelize.STRING(100),
               allowNull: false
             },
-            // 2016
             from_year: {
               type: Sequelize.INTEGER,
               allowNull: false
             },
-            // 2020
             to_year: {
               type: Sequelize.INTEGER,
               allowNull: false
             },
-            // 2016, 2017, 2018, 2019, 2020
             model_start_year: {
               type: Sequelize.STRING(4),
               allowNull: true
@@ -52,7 +47,6 @@ module.exports = {
               type: Sequelize.STRING(100),
               allowNull: true
             },
-            // L4 (most common)
             engine_type: {
               type: Sequelize.ENUM(
                 'V2',
@@ -134,7 +128,6 @@ module.exports = {
               type: Sequelize.STRING(100),
               allowNull: true
             },
-            // 300
             torque: {
               type: Sequelize.INTEGER,
               allowNull: true
@@ -147,7 +140,6 @@ module.exports = {
               type: Sequelize.INTEGER,
               allowNull: true
             },
-            // 8.1
             acceleration: {
               type: Sequelize.DOUBLE,
               allowNull: true

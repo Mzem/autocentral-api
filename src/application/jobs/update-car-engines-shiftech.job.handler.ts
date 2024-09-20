@@ -54,8 +54,13 @@ export class UpdateCarEnginesShiftechJobHandler extends JobHandler<Job> {
           id: uuid.v4(),
           makeId,
           model: cleanString(carEngine.model),
-          type: cleanString(carEngine.type),
-          fromYear: cleanString(carEngine.year),
+          type:
+            cleanString(carEngine.type) === cleanString(carEngine.year)
+              ? null
+              : cleanString(carEngine.type),
+          fromYear: isNaN(Number(cleanString(carEngine.year)))
+            ? null
+            : Number(cleanString(carEngine.year)),
           engineName,
           cylinder: extractCylinder(engineName),
           fuel: dictFuelMapping[cleanString(carEngine.fuel)],
@@ -86,7 +91,7 @@ export class UpdateCarEnginesShiftechJobHandler extends JobHandler<Job> {
       errors: 0,
       success: !error,
       executionDate: now,
-      executionTime: now.diffNow().milliseconds * -1,
+      executionTime: DateService.countExecutionTime(now),
       result: {
         skippedMakes
       }

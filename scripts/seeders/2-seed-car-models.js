@@ -1,5 +1,8 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize, QueryTypes } = require('sequelize')
 require('dotenv').config({ path: '../../.environment' })
+function cleanString(string) {
+  return string?.toString().replace(/\s+/g, ' ').trim()
+}
 
 const databaseUrl = process.env.DATABASE_URL
 
@@ -46,43 +49,48 @@ function displacementToCylinder(displacement) {
 }
 
 sequelize.transaction(async transaction => {
+  const makeIds = (
+    await sequelize.query(`SELECT * from car_make`, {
+      type: QueryTypes.SELECT,
+      transaction
+    })
+  ).map(makeSQL => makeSQL.id)
   const updateDate = new Date().toISOString()
+
   for (const car of cars) {
     console.log('processing ' + car.title)
     let make_id = car.make_id
-    let model = car.model
 
-    if (car.make_id === 'mercedes-amg') {
-      make_id = 'mercedes'
-      if (!model.toUpperCase().includes('AMG')) {
-        model += ' AMG'
-      }
-    } else if (car.make_id === 'mercedes-benz') {
-      make_id = 'mercedes'
-    }
+    if (!makeIds.includes(make_id)) continue
 
     await sequelize.query(
       `INSERT INTO car_model 
-      (id, make_id, model, from_year, to_year, production_years, model_start_year, model_end_year, engine_name, engine_detail, engine_type, displacement, cylinder, body, fuel, hp, hp_detail, torque, torque_detail, electric_hp, acceleration, top_speed, fuel_system, fuel_capacity, fuel_highway, fuel_urban, fuel_combined, drive_type, gearbox, front_brakes, rear_brakes, tire_size, length, width, height, wheelbase, cargo_volume, ground_clearance, weight, weight_limit, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (id, make_id, model, from_year, to_year, engine_name, engine_detail, engine_type, displacement, cylinder, body, fuel, hp, hp_detail, torque, torque_detail, electric_hp, acceleration, top_speed, fuel_system, fuel_capacity, fuel_highway, fuel_urban, fuel_combined, drive_type, gearbox, front_brakes, rear_brakes, tire_size, length, width, height, wheelbase, cargo_volume, ground_clearance, weight, weight_limit, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       {
         replacements: [
           car.uuid,
           make_id,
-          car.model,
+          cleanString(car.model.replace('doors', 'portes')),
           car.production_start_year,
-          car.production_end_year || car.production_start_year,
-          car.production_years || null,
-          car.model_start_year || null,
-          car.model_end_year || null,
-          car.engine_name || null,
+          isNaN(Number(car.production_end_year))
+            ? null
+            : Number(car.production_end_year),
+          cleanString(
+            car.engine_name
+              ?.replace('AWD', '')
+              .replace('FWD', '')
+              .replace('RWD', '')
+          ) || null,
           car.engine_detail || null,
           car.engine_type || null,
           car.displacement || null,
           car.displacement
             ? displacementToCylinder(car.displacement)
             : extractCylinder(car.engine_name),
-          car.body || null,
+          car.body
+            ?.replace(' (Spyder, Cabriolet)', '')
+            .replace(' (break, combi, touring)', '/Break') || null,
           car.fuel || null,
           car.hp || null,
           car.hp_detail || null,
@@ -96,8 +104,11 @@ sequelize.transaction(async transaction => {
           calculateHighwayConsumption(car.city, car.combined),
           car.city || null,
           car.combined || null,
-          car.drive_type || null,
-          car.gearbox || null,
+          car.drive_type
+            ?.replace('RWD', 'Propulsion')
+            .replace('AWD', 'Intégrale')
+            .replace('FWD', 'Traction') || null,
+          cleanString(renameGearbox(car.gearbox)) || null,
           car.front_brakes || null,
           car.rear_brakes || null,
           car.tire_size || null,
@@ -116,3 +127,25 @@ sequelize.transaction(async transaction => {
     )
   }
 })
+
+function renameGearbox(gearbox) {
+  return gearbox
+    ?.replace('single gear', 'vitesse unique')
+    .replace('Single gear', 'vitesse unique')
+    .replace('Single speed', 'vitesse unique')
+    .replace('Single Speed', 'vitesse unique')
+    .replace('speed', 'vitesses')
+    .replace('Speed', 'vitesses')
+    .replace('-automatic', ' automatique')
+    .replace('-Automatic', ' automatique')
+    .replace('automatic', 'automatique')
+    .replace('automayic', 'automatique')
+    .replace('Automatic', 'automatique')
+    .replace('-manual', ' manuelle')
+    .replace('-Manual', ' manuelle')
+    .replace('manual', 'manuelle')
+    .replace('Manual', 'manuelle')
+    .replace('six', '6')
+    .replace('Six', '6')
+    .replace('gearbox', '')
+}

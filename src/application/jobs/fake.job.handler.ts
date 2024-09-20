@@ -22,7 +22,7 @@ export class FakeJobHandler extends JobHandler<Job> {
       errors: 0,
       success: true,
       executionDate: now,
-      executionTime: now.diffNow().milliseconds * -1,
+      executionTime: DateService.countExecutionTime(now),
       result: {}
     }
   }

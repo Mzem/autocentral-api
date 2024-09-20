@@ -65,8 +65,8 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
           makeId,
           model,
           type,
-          fromYear,
-          toYear,
+          fromYear: isNaN(Number(fromYear)) ? null : Number(fromYear),
+          toYear: isNaN(Number(toYear)) ? null : Number(toYear),
           engineName,
           cylinder: extractCylinder(engineName),
           fuel: dictFuelMapping[carEngine.fuel.trim()],
@@ -92,7 +92,7 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
       errors: 0,
       success: !error,
       executionDate: now,
-      executionTime: now.diffNow().milliseconds * -1,
+      executionTime: DateService.countExecutionTime(now),
       result: {
         skippedMakes
       }

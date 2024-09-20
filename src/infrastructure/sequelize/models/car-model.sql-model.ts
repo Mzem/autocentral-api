@@ -22,20 +22,11 @@ export class CarModelDto extends Model {
   @Column({ field: 'model', type: DataType.STRING })
   model: string
 
-  @Column({ field: 'from_year', type: DataType.STRING })
-  fromYear: string
+  @Column({ field: 'from_year', type: DataType.INTEGER })
+  fromYear: number
 
-  @Column({ field: 'to_year', type: DataType.STRING })
-  toYear: string
-
-  @Column({ field: 'production_years', type: DataType.STRING })
-  productionYears: string | null
-
-  @Column({ field: 'model_start_year', type: DataType.STRING })
-  modelStartYear: string | null
-
-  @Column({ field: 'model_end_year', type: DataType.STRING })
-  modelEndYear: string | null
+  @Column({ field: 'to_year', type: DataType.INTEGER })
+  toYear: number | null
 
   @Column({ field: 'engine_name', type: DataType.STRING })
   engineName: string | null

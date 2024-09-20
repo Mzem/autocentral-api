@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { CarEngineSqlModel } from '../../infrastructure/sequelize/models/car-engine.sql-model'
 import { CarMakeSqlModel } from '../../infrastructure/sequelize/models/car-make.sql-model'
+import { CarModelSqlModel } from '../../infrastructure/sequelize/models/car-model.sql-model'
 import { NotFoundFailure } from '../../utils/result/error'
 import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
-import { mapEngineYears, mapMakeSQLToQueryModel } from './mappers'
 import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
-import { CarModelSqlModel } from '../../infrastructure/sequelize/models/car-model.sql-model'
+import { mapMakeSQLToQueryModel } from './mappers'
 
 class RelatedModel {
   @ApiProperty()
@@ -17,8 +17,8 @@ class RelatedModel {
   @ApiProperty()
   model: string
 
-  @ApiProperty({ required: false })
-  productionYears?: string
+  @ApiProperty()
+  fromYear: number
 
   @ApiProperty({ required: false })
   engineDetail?: string
@@ -83,7 +83,7 @@ export class CarModelDetailQueryModel {
   @ApiProperty()
   model: string
   @ApiProperty({ required: false })
-  fromYear?: string
+  fromYear?: number
   @ApiProperty({ required: false })
   type?: string
 
@@ -161,7 +161,7 @@ export class GetCarModelDetailQueryHandler extends QueryHandler<
         engineSQL.urlSourceShiftech || engineSQL.urlSourceBRPerf || undefined,
       relatedModels: engineSQL.models.map(model => ({
         id: model.id,
-        productionYears: mapEngineYears(model.fromYear, model.toYear),
+        fromYear: model.fromYear,
         model: model.model,
         engineDetail: model.engineDetail ?? undefined,
         cylinder: model.cylinder ?? undefined,
