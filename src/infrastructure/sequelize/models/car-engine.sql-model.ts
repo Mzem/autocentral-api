@@ -6,7 +6,8 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
+  Table,
+  Unique
 } from 'sequelize-typescript'
 import { Fuel } from '../../../domain/car-model'
 import { CarMakeSqlModel } from './car-make.sql-model'
@@ -29,10 +30,10 @@ export class CarEngineDto extends Model {
   type: string | null
 
   @Column({ field: 'from_year', type: DataType.STRING })
-  fromYear: string
+  fromYear: string | null
 
   @Column({ field: 'to_year', type: DataType.STRING })
-  toYear: string
+  toYear: string | null
 
   @Column({ field: 'engine_name', type: DataType.STRING })
   engineName: string | null
@@ -41,22 +42,36 @@ export class CarEngineDto extends Model {
   cylinder: string | null
 
   @Column({ field: 'fuel', type: DataType.STRING })
-  fuel: Fuel | null
+  fuel: Fuel
 
   @Column({ field: 'hp', type: DataType.INTEGER })
   hp: number | null
 
-  @Column({ field: 'hp_remap', type: DataType.INTEGER })
-  hpRemap: number | null
+  @Column({ field: 'hp_stage1', type: DataType.INTEGER })
+  hpStage1: number | null
+
+  @Column({ field: 'hp_stage2', type: DataType.INTEGER })
+  hpStage2: number | null
 
   @Column({ field: 'torque', type: DataType.INTEGER })
   torque: number | null
 
-  @Column({ field: 'torque_remap', type: DataType.INTEGER })
-  torqueRemap: number | null
+  @Column({ field: 'torque_stage1', type: DataType.INTEGER })
+  torqueStage1: number | null
 
-  @Column({ field: 'url_source', type: DataType.STRING })
-  urlSource: string | null
+  @Column({ field: 'torque_stage2', type: DataType.INTEGER })
+  torqueStage2: number | null
+
+  @Unique
+  @Column({ field: 'url_source_brperf', type: DataType.STRING })
+  urlSourceBRPerf: string | null
+
+  @Unique
+  @Column({ field: 'url_source_shiftech', type: DataType.STRING })
+  urlSourceShiftech: string | null
+
+  @Column({ field: 'image_url', type: DataType.STRING })
+  imageUrl: string | null
 
   @Column({ field: 'updated_at', type: DataType.DATE })
   updatedAt: Date

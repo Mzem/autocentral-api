@@ -82,14 +82,11 @@ export class CarModelDetailQueryModel {
   make: CarMakeQueryModel
   @ApiProperty()
   model: string
-  @ApiProperty()
-  years: string
-
-  @ApiProperty()
-  relatedModels: RelatedModel[]
-
+  @ApiProperty({ required: false })
+  fromYear?: string
   @ApiProperty({ required: false })
   type?: string
+
   @ApiProperty({ required: false })
   engineName?: string
   @ApiProperty({ required: false })
@@ -99,13 +96,20 @@ export class CarModelDetailQueryModel {
   @ApiProperty({ required: false })
   hp?: number
   @ApiProperty({ required: false })
-  hpRemap?: number
+  hpStage1?: number
+  @ApiProperty({ required: false })
+  hpStage2?: number
   @ApiProperty({ required: false })
   torque?: number
   @ApiProperty({ required: false })
-  torqueRemap?: number
+  torqueStage1?: number
+  @ApiProperty({ required: false })
+  torqueStage2?: number
   @ApiProperty({ required: false })
   urlSource?: string
+
+  @ApiProperty()
+  relatedModels: RelatedModel[]
 }
 
 export interface GetCarModelDetailQuery extends Query {
@@ -142,16 +146,19 @@ export class GetCarModelDetailQueryHandler extends QueryHandler<
       id: engineSQL.id,
       make: mapMakeSQLToQueryModel(engineSQL.make!),
       model: engineSQL.model,
-      years: mapEngineYears(engineSQL.fromYear, engineSQL.toYear),
+      fromYear: engineSQL.fromYear ?? undefined,
       type: engineSQL.type ?? undefined,
       engineName: engineSQL.engineName ?? undefined,
       cylinder: engineSQL.cylinder ?? undefined,
       fuel: engineSQL.fuel ?? undefined,
       hp: engineSQL.hp ?? undefined,
-      hpRemap: engineSQL.hpRemap ?? undefined,
+      hpStage1: engineSQL.hpStage1 ?? undefined,
+      hpStage2: engineSQL.hpStage2 ?? undefined,
       torque: engineSQL.torque ?? undefined,
-      torqueRemap: engineSQL.torqueRemap ?? undefined,
-      urlSource: engineSQL.urlSource ?? undefined,
+      torqueStage1: engineSQL.torqueStage1 ?? undefined,
+      torqueStage2: engineSQL.torqueStage2 ?? undefined,
+      urlSource:
+        engineSQL.urlSourceShiftech || engineSQL.urlSourceBRPerf || undefined,
       relatedModels: engineSQL.models.map(model => ({
         id: model.id,
         productionYears: mapEngineYears(model.fromYear, model.toYear),

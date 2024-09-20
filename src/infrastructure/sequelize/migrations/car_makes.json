@@ -1,7 +1,9 @@
 [
   {
-    "id": "ac",
-    "name": "AC"
+    "id": "abarth",
+    "name": "Abarth",
+    "category": "performance",
+    "remap": true
   },
   {
     "id": "acura",
@@ -25,30 +27,14 @@
     "category": "performance"
   },
   {
-    "id": "ariel-motors",
-    "name": "Ariel Motors"
-  },
-  {
-    "id": "artega",
-    "name": "Artega"
-  },
-  {
     "id": "aston-martin",
     "name": "Aston Martin",
     "category": "performance"
   },
   {
-    "id": "piaggio",
-    "name": "Piaggio"
-  },
-  {
     "id": "audi",
     "name": "Audi",
     "category": "common"
-  },
-  {
-    "id": "aurus",
-    "name": "Aurus"
   },
   {
     "id": "bentley",
@@ -72,18 +58,6 @@
     "remap": false
   },
   {
-    "id": "borgward",
-    "name": "Borgward"
-  },
-  {
-    "id": "bristol",
-    "name": "Bristol"
-  },
-  {
-    "id": "bufori",
-    "name": "Bufori"
-  },
-  {
     "id": "bugatti",
     "name": "Bugatti",
     "category": "performance"
@@ -97,10 +71,6 @@
     "id": "cadillac",
     "name": "Cadillac",
     "category": "other"
-  },
-  {
-    "id": "caterham",
-    "name": "Caterham"
   },
   {
     "id": "chevrolet",
@@ -128,25 +98,13 @@
     "category": "common"
   },
   {
-    "id": "daewoo",
-    "name": "Daewoo"
-  },
-  {
-    "id": "daihatsu",
-    "name": "Daihatsu"
-  },
-  {
-    "id": "dmc",
-    "name": "DMC"
-  },
-  {
     "id": "dodge",
     "name": "Dodge",
     "category": "common"
   },
   {
-    "id": "ds-automobiles",
-    "name": "DS-Automobiles",
+    "id": "ds",
+    "name": "DS",
     "category": "common"
   },
   {
@@ -158,10 +116,6 @@
     "id": "fiat",
     "name": "Fiat",
     "category": "common"
-  },
-  {
-    "id": "fisker",
-    "name": "Fisker"
   },
   {
     "id": "ford",
@@ -210,10 +164,6 @@
     "category": "other"
   },
   {
-    "id": "ineos",
-    "name": "Ineos"
-  },
-  {
     "id": "isuzu",
     "name": "Isuzu",
     "category": "common"
@@ -244,10 +194,6 @@
     "remap": false
   },
   {
-    "id": "ktm",
-    "name": "KTM"
-  },
-  {
     "id": "lada",
     "name": "Lada",
     "category": "common",
@@ -272,10 +218,6 @@
     "id": "lexus",
     "name": "Lexus",
     "category": "common"
-  },
-  {
-    "id": "lightyear",
-    "name": "Lightyear"
   },
   {
     "id": "lincoln",
@@ -330,34 +272,14 @@
     "category": "common"
   },
   {
-    "id": "mpm",
-    "name": "MPM"
-  },
-  {
     "id": "mitsubishi",
     "name": "Mitsubishi",
     "category": "common"
   },
   {
-    "id": "morgan",
-    "name": "Morgan"
-  },
-  {
-    "id": "nio",
-    "name": "Nio"
-  },
-  {
-    "id": "pgo",
-    "name": "PGO"
-  },
-  {
     "id": "nissan",
     "name": "Nissan",
     "category": "common"
-  },
-  {
-    "id": "oldsmobile",
-    "name": "Oldsmobile"
   },
   {
     "id": "opel",
@@ -370,17 +292,9 @@
     "category": "performance"
   },
   {
-    "id": "perodua",
-    "name": "Perodua"
-  },
-  {
     "id": "peugeot",
     "name": "Peugeot",
     "category": "common"
-  },
-  {
-    "id": "pininfarina",
-    "name": "Pininfarina"
   },
   {
     "id": "polestar",
@@ -400,14 +314,6 @@
     "category": "common"
   },
   {
-    "id": "proton",
-    "name": "Proton"
-  },
-  {
-    "id": "qoros",
-    "name": "Qoros"
-  },
-  {
     "id": "mahindra",
     "name": "Mahindra",
     "category": "asian"
@@ -424,10 +330,6 @@
     "remap": false
   },
   {
-    "id": "rivian",
-    "name": "Rivian"
-  },
-  {
     "id": "rolls-royce",
     "name": "Rolls-Royce",
     "category": "performance"
@@ -436,22 +338,6 @@
     "id": "saab",
     "name": "Saab",
     "category": "other"
-  },
-  {
-    "id": "saturn",
-    "name": "Saturn"
-  },
-  {
-    "id": "samsung",
-    "name": "Samsung"
-  },
-  {
-    "id": "scion",
-    "name": "Scion"
-  },
-  {
-    "id": "secma",
-    "name": "Secma"
   },
   {
     "id": "seat",
@@ -469,11 +355,7 @@
     "category": "common"
   },
   {
-    "id": "spyker",
-    "name": "Spyker"
-  },
-  {
-    "id": "ssang-yong",
+    "id": "ssangyong",
     "name": "SsangYong",
     "category": "asian"
   },
@@ -521,14 +403,6 @@
     "name": "Chery",
     "category": "asian",
     "remap": false
-  },
-  {
-    "id": "wiesmann",
-    "name": "Wiesmann"
-  },
-  {
-    "id": "westfield",
-    "name": "Westfield"
   },
   {
     "id": "man",

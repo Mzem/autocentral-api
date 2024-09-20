@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Scraper } from '../../domain/scraper'
 import { FirebaseClient } from '../clients/firebase-client'
-import { bufferToJson } from '../../utils/utils'
+import { bufferToJson } from '../../application/helpers'
 
 const SCRAPS_DIR = 'scraps'
 

@@ -3,13 +3,20 @@ import { Inject, Injectable } from '@nestjs/common'
 import * as cheerio from 'cheerio'
 import { Element } from 'domhandler'
 import { firstValueFrom } from 'rxjs'
-import { JobPlanner, ProcessJobType } from '../../../domain/job-planner'
+import {
+  JobPlanner,
+  JobPlannerRepositoryToken,
+  ProcessJobType
+} from '../../../domain/job-planner'
 import { Scraper, ScraperRepositoryToken } from '../../../domain/scraper'
 import { DateService } from '../../../utils/date.service'
 import { Job } from '../../types/job'
 import { JobHandler } from '../../types/job-handler'
+import { CarMakeSqlModel } from '../../../infrastructure/sequelize/models/car-make.sql-model'
+import { fromNameToId } from '../../helpers'
 
 const SITE = 'https://www.br-performance.fr/brp-paris/'
+let errors = 0
 
 export interface BRPerfScrapedData {
   make: string
@@ -55,7 +62,9 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
     private dateService: DateService,
     private httpService: HttpService,
     @Inject(ScraperRepositoryToken)
-    private readonly scraperRepository: Scraper.Repository
+    private readonly scraperRepository: Scraper.Repository,
+    @Inject(JobPlannerRepositoryToken)
+    private readonly jobPlannerRepository: JobPlanner.Repository
   ) {
     super(JobPlanner.JobType.SCRAP_BRPERF)
   }
@@ -71,6 +80,12 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
         Scraper.Site.BRPERF,
         scrapedDataJson
       )
+
+      await this.jobPlannerRepository.createJob({
+        executionDate: this.dateService.nowJs(),
+        type: JobPlanner.JobType.UPDATE_CAR_ENGINES_BRPERF,
+        content: undefined
+      })
     } catch (e) {
       error = e
       this.logger.error(e)
@@ -78,7 +93,7 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
 
     return {
       jobType: this.jobType,
-      errors: 0,
+      errors,
       success: !error,
       executionDate: now,
       executionTime: DateService.countExecutionTime(now),
@@ -92,7 +107,13 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
     const carMakes = await this.getCarMakes(urlCarMakes)
     const scrapedData: BRPerfScrapedData[] = []
 
-    for (const carMake of carMakes) {
+    const savedMakeIds = (await CarMakeSqlModel.findAll()).map(
+      savedMake => savedMake.id
+    )
+    const makesToHandle = carMakes.filter(make => {
+      return savedMakeIds.includes(fromNameToId(make.name))
+    })
+    for (const carMake of makesToHandle) {
       this.logger.debug(carMake.name)
 
       const carModels = await this.getCarModels(SITE + carMake.url)
@@ -158,7 +179,8 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
         )
       }
     } catch (error) {
-      this.logger.error('Error fetching car brand data:', error)
+      errors++
+      this.logger.error('Error fetching car makes:', error)
     }
     return carMakes
   }
@@ -182,13 +204,13 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
             const href = $(aTag).attr('href')
             const title = $(aTag).attr('title')
 
-            // Add the href and title to the respective arrays
             if (href && title) {
               carModels.push({ url: href, name: title })
             }
           })
       })
     } catch (error) {
+      errors++
       this.logger.error('Error fetching car models:', error)
     }
     return carModels
@@ -235,6 +257,7 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
           })
       })
     } catch (error) {
+      errors++
       this.logger.error('Error fetching model years:', error)
     }
     return modelYears
@@ -271,6 +294,7 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
           })
       })
     } catch (error) {
+      errors++
       this.logger.error('Error fetching engine: ' + error)
     }
     return carEngines
@@ -300,6 +324,7 @@ export class ScrapBRPerfJobHandler extends JobHandler<Job> {
         remap.torqueRemap = rows.eq(2).find('td').eq(1).text().trim()
       }
     } catch (error) {
+      errors++
       this.logger.error('Error fetching data:', error)
     }
     return remap

@@ -37,6 +37,7 @@
     "tasks:dummy-job": "TASK_NAME=DUMMY_JOB node dist/main",
     "tasks:clean-job": "TASK_NAME=CLEAN_JOBS node dist/main",
     "tasks:scrap-brperf": "TASK_NAME=SCRAP_BRPERF node dist/main",
+    "tasks:scrap-shiftech": "TASK_NAME=SCRAP_SHIFTECH node dist/main",
     "tasks:update-car-engines": "TASK_NAME=UPDATE_CAR_ENGINES node dist/main"
   },
   "dependencies": {

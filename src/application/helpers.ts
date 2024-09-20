@@ -24,3 +24,18 @@ export function sanitizeStringForDBInsert(
 export function bufferToJson<T>(buffer: Buffer): T {
   return JSON.parse(buffer.toString())
 }
+
+export function fromNameToId(name: string): string {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics (accents)
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, ' ') // Remove multiple whitespaces
+    .toLowerCase()
+    .trim()
+    .replace(/ /g, '-')
+}
+
+export function cleanString(string: string): string {
+  return string.toString().replace(/\s+/g, ' ').trim()
+}

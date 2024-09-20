@@ -52,6 +52,9 @@ export default () => {
       minConnections: process.env.DATABASE_MIN_CONNECTIONS || 1
     },
     scrapers: {
+      shiftech: {
+        apiToken: process.env.SHIFTECH_API_TOKEN
+      },
       regsScraper: {
         siteUrl: process.env.REGS_SCRAPER_SITE_URL,
         captchaKey: process.env.REGS_SCRAPER_CAPTCHA_KEY,

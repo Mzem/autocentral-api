@@ -37,11 +37,14 @@ import { WorkerService } from './application/worker.service.db'
 import { CleanJobsJobHandler } from './application/jobs/clean-jobs.job.handler'
 import { InitCronsCommandHandler } from './application/tasks/init-crons'
 import { PlanCronExecutionCommandHandler } from './application/tasks/plan-cron-execution'
-import { UpdateCarEnginesJobHandler } from './application/jobs/update-car-engines.job.handler'
+import { UpdateCarEnginesBRPerfJobHandler } from './application/jobs/update-car-engines-br-perf.job.handler'
 import { ScrapBRPerfJobHandler } from './application/jobs/scraps/scrap-brperf.job.handler'
 import { FirebaseClient } from './infrastructure/clients/firebase-client'
 import { ScraperRepository } from './infrastructure/repositories/scraper.repository.'
 import { ScraperRepositoryToken } from './domain/scraper'
+import { ScrapShiftechJobHandler } from './application/jobs/scraps/scrap-shiftech.job.handler'
+import { ShiftechApiClient } from './infrastructure/clients/shiftech-api-client'
+import { UpdateCarEnginesShiftechJobHandler } from './application/jobs/update-car-engines-shiftech.job.handler'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -69,6 +72,7 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
     TaskService,
     DateService,
     FirebaseClient,
+    ShiftechApiClient,
     ApiKeyAuthGuard,
     {
       provide: JobPlannerRepositoryToken,
@@ -105,8 +109,10 @@ export function buildJobHandlerProviders(): Provider[] {
 export const JobHandlerProviders = [
   FakeJobHandler,
   CleanJobsJobHandler,
-  UpdateCarEnginesJobHandler,
-  ScrapBRPerfJobHandler
+  UpdateCarEnginesBRPerfJobHandler,
+  UpdateCarEnginesShiftechJobHandler,
+  ScrapBRPerfJobHandler,
+  ScrapShiftechJobHandler
 ]
 
 @Module(buildModuleMetadata())

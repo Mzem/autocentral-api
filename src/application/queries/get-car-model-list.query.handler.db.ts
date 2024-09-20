@@ -7,7 +7,7 @@ import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
 import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
-import { mapEngineYears, mapMakeSQLToQueryModel } from './mappers'
+import { mapMakeSQLToQueryModel } from './mappers'
 
 class Engine {
   @ApiProperty()
@@ -25,7 +25,7 @@ class Engine {
 }
 class ModelYearsListItem {
   @ApiProperty()
-  years: string
+  year: string
   @ApiProperty({ type: Engine, isArray: true })
   engines: Engine[]
 }
@@ -66,64 +66,64 @@ export class GetCarModelListQueryHandler extends QueryHandler<
       return NotFoundFailure('Make', query.makeId)
     }
 
-    const modelsSQL = await CarEngineSqlModel.findAll({
+    const _modelsSQL = await CarEngineSqlModel.findAll({
       where: {
         makeId: query.makeId
       }
     })
 
-    const groupedByModels: ModelListItem[] = modelsSQL.reduce(
-      (groupedModels: ModelListItem[], modelSQL: CarEngineSqlModel) => {
-        const currentModelName = modelSQL.model
-        const existingModelName = groupedModels.find(
-          model => model.modelName === currentModelName
-        )
+    // const groupedByModels: ModelListItem[] = modelsSQL.reduce(
+    //   (groupedModels: ModelListItem[], modelSQL: CarEngineSqlModel) => {
+    //     const currentModelName = modelSQL.model
+    //     const existingModelName = groupedModels.find(
+    //       model => model.modelName === currentModelName
+    //     )
 
-        const currentModelYears = mapEngineYears(
-          modelSQL.fromYear,
-          modelSQL.toYear
-        )
+    //     const currentModelYears = mapEngineYears(
+    //       modelSQL.fromYear,
+    //       modelSQL.toYear
+    //     )
 
-        if (existingModelName) {
-          const existingModelYears = existingModelName.modelYears.find(
-            modelYears => modelYears.years === currentModelYears
-          )
+    //     if (existingModelName) {
+    //       const existingModelYears = existingModelName.modelYears.find(
+    //         modelYears => modelYears.years === currentModelYears
+    //       )
 
-          if (existingModelYears) {
-            // If it exists, push the engine to the existing engines array
-            existingModelYears.engines.push(sqlToEngine(modelSQL))
-          } else {
-            // Otherwise, create a new entry in the accumulator
-            existingModelName.modelYears.push({
-              years: currentModelYears,
-              engines: [sqlToEngine(modelSQL)]
-            })
-          }
-        } else {
-          groupedModels.push({
-            modelName: currentModelName,
-            modelYears: [
-              {
-                years: currentModelYears,
-                engines: [sqlToEngine(modelSQL)]
-              }
-            ]
-          })
-        }
+    //       if (existingModelYears) {
+    //         // If it exists, push the engine to the existing engines array
+    //         existingModelYears.engines.push(sqlToEngine(modelSQL))
+    //       } else {
+    //         // Otherwise, create a new entry in the accumulator
+    //         existingModelName.modelYears.push({
+    //           years: currentModelYears,
+    //           engines: [sqlToEngine(modelSQL)]
+    //         })
+    //       }
+    //     } else {
+    //       groupedModels.push({
+    //         modelName: currentModelName,
+    //         modelYears: [
+    //           {
+    //             years: currentModelYears,
+    //             engines: [sqlToEngine(modelSQL)]
+    //           }
+    //         ]
+    //       })
+    //     }
 
-        return groupedModels
-      },
-      []
-    )
+    //     return groupedModels
+    //   },
+    //   []
+    // )
 
     return success({
       make: mapMakeSQLToQueryModel(makeSQL),
-      models: groupedByModels
+      models: []
     })
   }
 }
 
-function sqlToEngine(modelSQL: CarEngineSqlModel): Engine {
+function _sqlToEngine(modelSQL: CarEngineSqlModel): Engine {
   return {
     id: modelSQL.id,
     type: modelSQL.type ?? undefined,

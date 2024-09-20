@@ -8,7 +8,7 @@ import { QueryHandler } from '../../types/query-handler'
 import { buildError } from '../../../utils/monitoring/logger.module'
 import * as uuid from 'uuid'
 import { AsSql } from '../../../infrastructure/sequelize/types'
-import { sanitizeStringForDBInsert } from '../../../utils/utils'
+import { sanitizeStringForDBInsert } from '../../helpers'
 
 @Injectable()
 // TODO passer en command

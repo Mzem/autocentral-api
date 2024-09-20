@@ -33,6 +33,9 @@ export const configurationSchema = Joi.object({
     minConnections: Joi.number().required()
   }).required(),
   scrapers: Joi.object({
+    shiftech: Joi.object({
+      apiToken: Joi.string().required()
+    }),
     regsScraper: Joi.object({
       siteUrl: Joi.string().required(),
       captchaKey: Joi.string().required(),

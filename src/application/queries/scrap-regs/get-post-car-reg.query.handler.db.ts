@@ -7,7 +7,7 @@ import {
 import { AsSql } from '../../../infrastructure/sequelize/types'
 import { buildError } from '../../../utils/monitoring/logger.module'
 import { emptySuccess, Result } from '../../../utils/result/result'
-import { sanitizeStringForDBInsert } from '../../../utils/utils'
+import { sanitizeStringForDBInsert } from '../../helpers'
 import { QueryHandler } from '../../types/query-handler'
 
 @Injectable()
