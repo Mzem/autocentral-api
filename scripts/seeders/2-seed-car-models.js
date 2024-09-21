@@ -49,6 +49,21 @@ function displacementToCylinder(displacement) {
 }
 
 sequelize.transaction(async transaction => {
+  await sequelize.query(
+    `DELETE FROM car_model_metadata WHERE car_model_id is not null`,
+    {
+      transaction
+    }
+  )
+  await sequelize.query(
+    `DELETE FROM car_engine_model_association WHERE car_engine_id is not null`,
+    {
+      transaction
+    }
+  )
+  await sequelize.query(`DELETE FROM car_model WHERE id is not null`, {
+    transaction
+  })
   const makeIds = (
     await sequelize.query(`SELECT * from car_make`, {
       type: QueryTypes.SELECT,

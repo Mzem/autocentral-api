@@ -14,6 +14,7 @@ import { CarMakeSqlModel } from '../../infrastructure/sequelize/models/car-make.
 import { cleanString, fromNameToId } from '../helpers'
 import { Fuel } from '../../domain/car-model'
 import { ShiftechScrapedData } from './scraps/scrap-shiftech.job.handler'
+import { makeIdsBRPerf } from './update-car-engines-br-perf.job.handler'
 
 @Injectable()
 @ProcessJobType(JobPlanner.JobType.UPDATE_CAR_ENGINES_SHIFTECH)
@@ -29,7 +30,7 @@ export class UpdateCarEnginesShiftechJobHandler extends JobHandler<Job> {
   async handle(): Promise<JobPlanner.Stats> {
     const now = this.dateService.now()
     let error
-    let skippedMakes: string = ''
+    const skippedMakes = []
 
     try {
       const carEnginesBR = await this.scraperRepository.get<
@@ -43,15 +44,20 @@ export class UpdateCarEnginesShiftechJobHandler extends JobHandler<Job> {
           carEngine.make.replace('Landrover', 'Land Rover')
         )
         const makeId = savedMakes.find(make => make.id === givenMakeId)?.id
-        if (!makeId) {
-          skippedMakes += `${carEngine.make}, `
+        if (!makeId || makeIdsBRPerf.includes(makeId)) {
+          skippedMakes.push(carEngine.make)
           continue
         }
+
+        const urlSourceShiftech = cleanString(carEngine.urlSource)
+        const existingRecord = await CarEngineSqlModel.findOne({
+          where: { urlSourceShiftech }
+        })
 
         const engineName = cleanString(carEngine.engineName)
 
         const carEngineSqlModel: Partial<AsSql<CarEngineDto>> = {
-          id: uuid.v4(),
+          id: existingRecord?.id || uuid.v4(),
           makeId,
           model: cleanString(carEngine.model),
           type:
@@ -70,7 +76,7 @@ export class UpdateCarEnginesShiftechJobHandler extends JobHandler<Job> {
           torque: extractTorque(carEngine.torque) || undefined,
           torqueStage1: extractTorque(carEngine.torqueStage1) || undefined,
           torqueStage2: extractTorque(carEngine.torqueStage2) || undefined,
-          urlSourceShiftech: cleanString(carEngine.urlSource),
+          urlSourceShiftech,
           imageUrl: carEngine.modelImg
             ? cleanString(carEngine.modelImg)
             : undefined,
@@ -93,7 +99,7 @@ export class UpdateCarEnginesShiftechJobHandler extends JobHandler<Job> {
       executionDate: now,
       executionTime: DateService.countExecutionTime(now),
       result: {
-        skippedMakes
+        skippedMakes: Array.from(new Set(skippedMakes))
       }
     }
   }

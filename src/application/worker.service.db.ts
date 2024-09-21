@@ -7,6 +7,8 @@ import {
 } from '../utils/monitoring/worker.tracking.service'
 import { JobHandlerProviders } from '../app.module'
 import { JobHandler } from './types/job-handler'
+import { DateService } from '../utils/date.service'
+import { DateTime } from 'luxon'
 
 @Injectable()
 export class WorkerService {
@@ -28,7 +30,7 @@ export class WorkerService {
   async handler(job: JobPlanner.Job<unknown>): Promise<void> {
     const jobName = `JOB-${job.type}`
     this.workerTrackingService.startJobTracking(jobName)
-    const startTime = new Date().getMilliseconds()
+    const startTime = DateTime.now()
     let success = true
     this.logger.log({
       job,
@@ -53,7 +55,7 @@ export class WorkerService {
         job,
         state: 'terminated',
         success,
-        duration: new Date().getMilliseconds() - startTime
+        duration: DateService.countExecutionTime(startTime)
       })
       if (stats?.success === false || !success) {
         // On veut passer le job en fail sur le planificateur

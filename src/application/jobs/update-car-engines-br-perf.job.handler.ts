@@ -1,19 +1,28 @@
 import { Inject, Injectable } from '@nestjs/common'
+import * as uuid from 'uuid'
+import { Fuel } from '../../domain/car-model'
 import { JobPlanner, ProcessJobType } from '../../domain/job-planner'
-import { DateService } from '../../utils/date.service'
-import { JobHandler } from '../types/job-handler'
-import { Job } from '../types/job'
 import { Scraper, ScraperRepositoryToken } from '../../domain/scraper'
-import { BRPerfScrapedData } from './scraps/scrap-brperf.job.handler'
 import {
   CarEngineDto,
   CarEngineSqlModel
 } from '../../infrastructure/sequelize/models/car-engine.sql-model'
 import { AsSql } from '../../infrastructure/sequelize/types'
-import * as uuid from 'uuid'
-import { CarMakeSqlModel } from '../../infrastructure/sequelize/models/car-make.sql-model'
+import { DateService } from '../../utils/date.service'
 import { cleanString, fromNameToId } from '../helpers'
-import { Fuel } from '../../domain/car-model'
+import { Job } from '../types/job'
+import { JobHandler } from '../types/job-handler'
+import { BRPerfScrapedData } from './scraps/scrap-brperf.job.handler'
+
+export const makeIdsBRPerf = [
+  'byd',
+  'geely',
+  'jac',
+  'mg',
+  'mahindra',
+  'tata',
+  'tesla'
+]
 
 @Injectable()
 @ProcessJobType(JobPlanner.JobType.UPDATE_CAR_ENGINES_BRPERF)
@@ -29,24 +38,23 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
   async handle(): Promise<JobPlanner.Stats> {
     const now = this.dateService.now()
     let error
-    let skippedMakes: string = ''
+    const skippedMakes = []
 
     try {
       const carEnginesBR = await this.scraperRepository.get<
         BRPerfScrapedData[]
       >(Scraper.Category.CAR_ENGINE, Scraper.Site.BRPERF)
 
-      const savedMakes = await CarMakeSqlModel.findAll()
-
       for (const carEngine of carEnginesBR) {
-        const givenMakeId = fromNameToId(
+        const makeId = fromNameToId(
           carEngine.make.replace('Landrover', 'Land Rover')
         )
-        const makeId = savedMakes.find(make => make.id === givenMakeId)?.id
-        if (!makeId) {
-          skippedMakes += `${carEngine.make}, `
+        if (!makeIdsBRPerf.includes(makeId)) {
+          skippedMakes.push(carEngine.make)
           continue
         }
+
+        this.logger.debug('handling make ' + makeId)
         const model = cleanString(carEngine.model.replace(carEngine.make, ''))
         const typeYears = cleanString(
           carEngine.typeYears.replace(carEngine.model, '')
@@ -60,8 +68,13 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
             : null
         const engineName = cleanString(carEngine.engineName)
 
+        const urlSourceBRPerf = cleanString(carEngine.urlSource)
+        const existingRecord = await CarEngineSqlModel.findOne({
+          where: { urlSourceBRPerf }
+        })
+
         const carEngineSqlModel: Partial<AsSql<CarEngineDto>> = {
-          id: uuid.v4(),
+          id: existingRecord?.id || uuid.v4(),
           makeId,
           model,
           type,
@@ -74,12 +87,12 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
           hpStage1: extractHP(carEngine.hpRemap) || undefined,
           torque: extractTorque(carEngine.torque) || undefined,
           torqueStage1: extractTorque(carEngine.torqueRemap) || undefined,
-          urlSourceBRPerf: cleanString(carEngine.urlSource),
+          urlSourceBRPerf,
           updatedAt: this.dateService.nowJs()
         }
 
         await CarEngineSqlModel.upsert(carEngineSqlModel, {
-          conflictFields: ['urlSourceBRPerf']
+          conflictFields: ['url_source_brperf']
         })
       }
     } catch (e) {
@@ -94,7 +107,7 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
       executionDate: now,
       executionTime: DateService.countExecutionTime(now),
       result: {
-        skippedMakes
+        skippedMakes: Array.from(new Set(skippedMakes))
       }
     }
   }

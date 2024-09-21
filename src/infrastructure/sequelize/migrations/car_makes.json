@@ -2,8 +2,7 @@
   {
     "id": "abarth",
     "name": "Abarth",
-    "category": "performance",
-    "remap": true
+    "category": "performance"
   },
   {
     "id": "acura",
@@ -42,20 +41,15 @@
     "category": "performance"
   },
   {
+    "id": "bestune",
+    "name": "Bestune",
+    "category": "china",
+    "remap": false
+  },
+  {
     "id": "bmw",
     "name": "BMW",
     "category": "common"
-  },
-  {
-    "id": "byd",
-    "name": "BYD",
-    "category": "asian"
-  },
-  {
-    "id": "haval",
-    "name": "Haval",
-    "category": "asian",
-    "remap": false
   },
   {
     "id": "bugatti",
@@ -65,12 +59,31 @@
   {
     "id": "buick",
     "name": "Buick",
-    "category": "other"
+    "category": "other",
+    "remap": false
+  },
+  {
+    "id": "byd",
+    "name": "BYD",
+    "category": "china",
+    "remap": false
   },
   {
     "id": "cadillac",
     "name": "Cadillac",
     "category": "other"
+  },
+  {
+    "id": "changan",
+    "name": "Changan",
+    "category": "china",
+    "remap": false
+  },
+  {
+    "id": "chery",
+    "name": "Chery",
+    "category": "china",
+    "remap": false
   },
   {
     "id": "chevrolet",
@@ -98,6 +111,12 @@
     "category": "common"
   },
   {
+    "id": "dfsk",
+    "name": "DFSK",
+    "category": "china",
+    "remap": false
+  },
+  {
     "id": "dodge",
     "name": "Dodge",
     "category": "common"
@@ -106,6 +125,12 @@
     "id": "ds",
     "name": "DS",
     "category": "common"
+  },
+  {
+    "id": "faw",
+    "name": "FAW",
+    "category": "china",
+    "remap": false
   },
   {
     "id": "ferrari",
@@ -118,40 +143,64 @@
     "category": "common"
   },
   {
+    "id": "foday",
+    "name": "Foday",
+    "category": "china",
+    "remap": false
+  },
+  {
     "id": "ford",
     "name": "Ford",
     "category": "common"
   },
   {
-    "id": "genesis",
-    "name": "Genesis",
-    "category": "other",
+    "id": "gac-motor",
+    "name": "GAC MOTOR",
+    "category": "china",
     "remap": false
-  },
-  {
-    "id": "gmc",
-    "name": "GMC",
-    "category": "other",
-    "remap": false
-  },
-  {
-    "id": "gwm",
-    "name": "GWM",
-    "category": "asian"
   },
   {
     "id": "geely",
     "name": "Geely",
-    "category": "asian"
+    "category": "china",
+    "remap": false
+  },
+  {
+    "id": "genesis",
+    "name": "Genesis",
+    "category": "other"
+  },
+  {
+    "id": "gmc",
+    "name": "GMC",
+    "category": "other"
+  },
+  {
+    "id": "gwm",
+    "name": "GWM",
+    "category": "china"
+  },
+  {
+    "id": "haval",
+    "name": "Haval",
+    "category": "china",
+    "remap": false
   },
   {
     "id": "holden",
-    "name": "Holden"
+    "name": "Holden",
+    "category": "other",
+    "remap": false
   },
   {
     "id": "honda",
     "name": "Honda",
     "category": "common"
+  },
+  {
+    "id": "hummer",
+    "name": "Hummer",
+    "category": "other"
   },
   {
     "id": "hyundai",
@@ -169,13 +218,20 @@
     "category": "common"
   },
   {
-    "id": "jaguar",
-    "name": "Jaguar",
-    "category": "common"
+    "id": "iveco",
+    "name": "Iveco",
+    "category": "utility"
   },
   {
     "id": "jac",
-    "name": "JAC"
+    "name": "JAC",
+    "category": "china",
+    "remap": false
+  },
+  {
+    "id": "jaguar",
+    "name": "Jaguar",
+    "category": "common"
   },
   {
     "id": "jeep",
@@ -196,8 +252,7 @@
   {
     "id": "lada",
     "name": "Lada",
-    "category": "common",
-    "remap": false
+    "category": "common"
   },
   {
     "id": "lamborghini",
@@ -228,6 +283,17 @@
     "id": "lotus",
     "name": "Lotus",
     "category": "performance"
+  },
+  {
+    "id": "mahindra",
+    "name": "Mahindra",
+    "category": "china"
+  },
+  {
+    "id": "man",
+    "name": "MAN",
+    "category": "utility",
+    "remap": false
   },
   {
     "id": "maserati",
@@ -314,11 +380,6 @@
     "category": "common"
   },
   {
-    "id": "mahindra",
-    "name": "Mahindra",
-    "category": "asian"
-  },
-  {
     "id": "renault",
     "name": "Renault",
     "category": "common"
@@ -337,7 +398,8 @@
   {
     "id": "saab",
     "name": "Saab",
-    "category": "other"
+    "category": "other",
+    "remap": false
   },
   {
     "id": "seat",
@@ -357,7 +419,7 @@
   {
     "id": "ssangyong",
     "name": "SsangYong",
-    "category": "asian"
+    "category": "common"
   },
   {
     "id": "subaru",
@@ -372,7 +434,7 @@
   {
     "id": "tata",
     "name": "Tata",
-    "category": "asian"
+    "category": "utility"
   },
   {
     "id": "tesla",
@@ -386,7 +448,9 @@
   },
   {
     "id": "vauxhall",
-    "name": "Vauxhall"
+    "name": "Vauxhall",
+    "category": "other",
+    "remap": false
   },
   {
     "id": "volkswagen",
@@ -399,17 +463,15 @@
     "category": "common"
   },
   {
-    "id": "chery",
-    "name": "Chery",
-    "category": "asian",
+    "id": "wallys",
+    "name": "Wallys",
+    "category": "common",
     "remap": false
   },
   {
-    "id": "man",
-    "name": "MAN"
-  },
-  {
     "id": "zenvo",
-    "name": "Zenvo"
+    "name": "Zenvo",
+    "category": "performance",
+    "remap": false
   }
 ]
