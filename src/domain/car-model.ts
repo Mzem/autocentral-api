@@ -12,3 +12,14 @@ export enum Fuel {
   DIESEL_MICRO_HYBRID = 'Diesel Micro Hybrid',
   ELECTRIQUE = 'Electrique'
 }
+
+export enum Transmission {
+  FWD = 'Traction',
+  AWD = 'Intégrale',
+  RWD = 'Propulsion'
+}
+
+export enum Gearbox {
+  AUTO = 'Automatique',
+  MANUAL = 'Manuelle'
+}

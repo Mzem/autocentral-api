@@ -39,3 +39,23 @@ export function fromNameToId(name: string): string {
 export function cleanString(string: string): string {
   return string.toString().replace(/\s+/g, ' ').trim()
 }
+
+export function cleanStringOrNull(
+  string: string | undefined | null
+): string | null {
+  return string?.toString().replace(/\s+/g, ' ').trim() || null
+}
+
+export function capitalize(input: string): string {
+  return input
+    .split(' ') // Split the string into words based on spaces
+    .map(word => {
+      // Capitalize first alphabetic character and lower case the rest
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ') // Join the words back with spaces
+}
+
+export function fromStringToNumber(string: string): number {
+  return Number(string.toString().replace(/\D+/g, ''))
+}

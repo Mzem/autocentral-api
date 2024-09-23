@@ -45,6 +45,9 @@ import { ScraperRepositoryToken } from './domain/scraper'
 import { ScrapShiftechJobHandler } from './application/jobs/scraps/scrap-shiftech.job.handler'
 import { ShiftechApiClient } from './infrastructure/clients/shiftech-api-client'
 import { UpdateCarEnginesShiftechJobHandler } from './application/jobs/update-car-engines-shiftech.job.handler'
+import { ScrapTayaraJobHandler } from './application/jobs/scraps/scrap-tayara.job.handler'
+import { TayaraApiClient } from './infrastructure/clients/tayara-api-client'
+import { CleanCarPostsJobHandler } from './application/jobs/clean-car-posts.job.handler'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -73,6 +76,7 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
     DateService,
     FirebaseClient,
     ShiftechApiClient,
+    TayaraApiClient,
     ApiKeyAuthGuard,
     {
       provide: JobPlannerRepositoryToken,
@@ -112,7 +116,9 @@ export const JobHandlerProviders = [
   UpdateCarEnginesBRPerfJobHandler,
   UpdateCarEnginesShiftechJobHandler,
   ScrapBRPerfJobHandler,
-  ScrapShiftechJobHandler
+  ScrapShiftechJobHandler,
+  ScrapTayaraJobHandler,
+  CleanCarPostsJobHandler
 ]
 
 @Module(buildModuleMetadata())

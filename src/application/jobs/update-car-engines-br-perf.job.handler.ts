@@ -113,7 +113,7 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
   }
 }
 
-function extractCylinder(inputString: string): string | null {
+export function extractCylinder(inputString: string): string | null {
   const match = inputString.match(/\d\.\d/)
   return match ? match[0] : null
 }

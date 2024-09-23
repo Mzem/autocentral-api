@@ -8,7 +8,7 @@ import {
   Table
 } from 'sequelize-typescript'
 import { CarMakeSqlModel } from './car-make.sql-model'
-import { Fuel } from '../../../domain/car-model'
+import { Fuel, Transmission } from '../../../domain/car-model'
 
 export class CarModelDto extends Model {
   @PrimaryKey
@@ -86,7 +86,7 @@ export class CarModelDto extends Model {
   fuelCombined: string | null
 
   @Column({ field: 'drive_type', type: DataType.STRING })
-  driveType: string | null
+  driveType: Transmission | null
 
   @Column({ field: 'gearbox', type: DataType.STRING })
   gearbox: string | null

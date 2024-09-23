@@ -37,8 +37,10 @@ export namespace JobPlanner {
     CLEAN_JOBS = 'CLEAN_JOBS',
     SCRAP_BRPERF = 'SCRAP_BRPERF',
     SCRAP_SHIFTECH = 'SCRAP_SHIFTECH',
+    SCRAP_TAYARA = 'SCRAP_TAYARA',
     UPDATE_CAR_ENGINES_BRPERF = 'UPDATE_CAR_ENGINES_BRPERF',
-    UPDATE_CAR_ENGINES_SHIFTECH = 'UPDATE_CAR_ENGINES_SHIFTECH'
+    UPDATE_CAR_ENGINES_SHIFTECH = 'UPDATE_CAR_ENGINES_SHIFTECH',
+    CLEAN_CAR_POSTS = 'CLEAN_CAR_POSTS'
   }
 
   export interface JobFake {
@@ -85,6 +87,16 @@ export const cronJobList: JobPlanner.CronJob[] = [
     type: JobPlanner.JobType.SCRAP_SHIFTECH,
     expression: '0 0 * * 0',
     description: 'Each sunday at 00:00'
+  },
+  {
+    type: JobPlanner.JobType.SCRAP_TAYARA,
+    expression: '*/15 * * * *',
+    description: 'Every 15th minute'
+  },
+  {
+    type: JobPlanner.JobType.CLEAN_CAR_POSTS,
+    expression: '0 3 * * *',
+    description: 'Daily at 03:00'
   }
 ]
 

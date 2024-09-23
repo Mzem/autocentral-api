@@ -52,6 +52,9 @@ export default () => {
       minConnections: process.env.DATABASE_MIN_CONNECTIONS || 1
     },
     scrapers: {
+      tayara: {
+        buildId: process.env.TAYARA_BUILD_ID
+      },
       shiftech: {
         apiToken: process.env.SHIFTECH_API_TOKEN
       },
