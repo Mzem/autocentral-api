@@ -136,6 +136,7 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               cv: postInfo.detail?.cv
                 ? fromStringToNumber(postInfo.detail?.cv)
                 : null,
+              hp: null,
               engine: cleanStringOrNull(postInfo.detail?.cylinder),
               cylinder: postInfo.detail?.cylinder
                 ? extractCylinder(postInfo.detail?.cylinder)
@@ -190,7 +191,8 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
                 '1 ere main',
                 '1 er main'
               ]),
-              carEngineId: null
+              carEngineId: null,
+              isFeatured: false
             }
 
             const potentialCarEngineId = await this.findCarEngineId(

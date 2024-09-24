@@ -22,10 +22,10 @@ export class CarPostDto extends Model {
   source: Source
 
   @Column({ field: 'id_source', type: DataType.STRING })
-  idSource: string
+  idSource: string | null
 
   @Column({ field: 'url_source', type: DataType.STRING })
-  urlSource: string
+  urlSource: string | null
 
   @ForeignKey(() => MerchantSqlModel)
   @Column({ field: 'merchant_id', type: DataType.STRING })
@@ -83,6 +83,9 @@ export class CarPostDto extends Model {
 
   @Column({ field: 'cv', type: DataType.INTEGER })
   cv: number | null
+
+  @Column({ field: 'hp', type: DataType.INTEGER })
+  hp: number | null
 
   @Column({ field: 'engine', type: DataType.STRING })
   engine: string | null
@@ -146,6 +149,9 @@ export class CarPostDto extends Model {
 
   @Column({ field: 'first_owner', type: DataType.BOOLEAN })
   firstOwner: boolean | null
+
+  @Column({ field: 'is_featured', type: DataType.BOOLEAN })
+  isFeatured: boolean
 }
 
 @Table({ timestamps: false, tableName: 'car_post' })

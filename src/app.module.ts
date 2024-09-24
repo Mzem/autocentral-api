@@ -48,6 +48,8 @@ import { UpdateCarEnginesShiftechJobHandler } from './application/jobs/update-ca
 import { ScrapTayaraJobHandler } from './application/jobs/scraps/scrap-tayara.job.handler'
 import { TayaraApiClient } from './infrastructure/clients/tayara-api-client'
 import { CleanCarPostsJobHandler } from './application/jobs/clean-car-posts.job.handler'
+import { CarPostsController } from './infrastructure/controllers/car-posts.controller'
+import { FindCarPostsQueryHandler } from './application/queries/find-car-posts.query.handler.db'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -66,6 +68,7 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
     CarRegsController,
     CarMakesController,
     CarModelsController,
+    CarPostsController,
     AppController
   ],
   providers: [
@@ -94,6 +97,7 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
 export function buildQueryCommandsProviders(): Provider[] {
   return [
     GetCarMakesQueryHandler,
+    FindCarPostsQueryHandler,
     GetCarModelListQueryHandler,
     GetCarModelDetailQueryHandler,
     FindCarRegQueryHandler,
