@@ -1,23 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
-import { QueryHandler } from '../types/query-handler'
 import { CarMakeSqlModel } from '../../infrastructure/sequelize/models/car-make.sql-model'
 import { Result, success } from '../../utils/result/result'
+import { QueryHandler } from '../types/query-handler'
 import { mapMakeSQLToQueryModel } from './mappers'
-
-export class CarMakeQueryModel {
-  @ApiProperty()
-  id: string
-
-  @ApiProperty()
-  name: string
-
-  @ApiProperty({ required: false })
-  category?: string
-
-  @ApiProperty()
-  remap: boolean
-}
+import { CarMakeQueryModel } from './query-models'
 
 @Injectable()
 export class GetCarMakesQueryHandler extends QueryHandler<

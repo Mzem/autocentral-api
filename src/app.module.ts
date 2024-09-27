@@ -10,10 +10,10 @@ import {
 import { ConfigModule } from '@nestjs/config'
 import { TerminusModule } from '@nestjs/terminus'
 import { FakeJobHandler } from './application/jobs/fake.job.handler'
-import { FindCarRegQueryHandler } from './application/queries/find-car-reg.query.handler.db'
+import { GetCarRegQueryHandler } from './application/queries/get-car-reg.query.handler.db'
 import { GetCarMakesQueryHandler } from './application/queries/get-car-makes.query.handler.db'
-import { GetCarModelDetailQueryHandler } from './application/queries/get-car-model-detail.query.handler.db'
-import { GetCarModelListQueryHandler } from './application/queries/get-car-model-list.query.handler.db'
+import { GetCarModelQueryHandler } from './application/queries/get-car-model.query.handler.db'
+import { FindCarModelsQueryHandler } from './application/queries/find-car-models.query.handler.db'
 import { GetMissingRSCarRegsQueryHandler } from './application/queries/scrap-regs/get-missing-car-regs.query.handler.db'
 import { GetPostCarRegNullQueryHandler } from './application/queries/scrap-regs/get-post-car-reg-null.query.handler.db'
 import { GetPostCarRegQueryHandler } from './application/queries/scrap-regs/get-post-car-reg.query.handler.db'
@@ -50,6 +50,7 @@ import { TayaraApiClient } from './infrastructure/clients/tayara-api-client'
 import { CleanCarPostsJobHandler } from './application/jobs/clean-car-posts.job.handler'
 import { CarPostsController } from './infrastructure/controllers/car-posts.controller'
 import { FindCarPostsQueryHandler } from './application/queries/find-car-posts.query.handler.db'
+import { GetCarPostQueryHandler } from './application/queries/get-car-post.query.handler.db'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -98,9 +99,10 @@ export function buildQueryCommandsProviders(): Provider[] {
   return [
     GetCarMakesQueryHandler,
     FindCarPostsQueryHandler,
-    GetCarModelListQueryHandler,
-    GetCarModelDetailQueryHandler,
-    FindCarRegQueryHandler,
+    GetCarPostQueryHandler,
+    FindCarModelsQueryHandler,
+    GetCarModelQueryHandler,
+    GetCarRegQueryHandler,
     GetPostCarRegQueryHandler,
     GetPostCarRegNullQueryHandler,
     GetMissingRSCarRegsQueryHandler,

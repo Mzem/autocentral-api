@@ -16,8 +16,8 @@ import {
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 import {
   CarRegQueryModel,
-  FindCarRegQueryHandler
-} from '../../application/queries/find-car-reg.query.handler.db'
+  GetCarRegQueryHandler
+} from '../../application/queries/get-car-reg.query.handler.db'
 import { GetMissingRSCarRegsQueryHandler } from '../../application/queries/scrap-regs/get-missing-car-regs.query.handler.db'
 import { GetPostCarRegNullQueryHandler } from '../../application/queries/scrap-regs/get-post-car-reg-null.query.handler.db'
 import { GetPostCarRegQueryHandler } from '../../application/queries/scrap-regs/get-post-car-reg.query.handler.db'
@@ -67,7 +67,7 @@ export class GetMissingRSRegsQP {
 @ApiTags('Car Registrations')
 export class CarRegsController {
   constructor(
-    private readonly getCarRegQueryHandler: FindCarRegQueryHandler,
+    private readonly getCarRegQueryHandler: GetCarRegQueryHandler,
     private readonly getPostCarReg: GetPostCarRegQueryHandler,
     private readonly getPostCarRegNull: GetPostCarRegNullQueryHandler,
     private readonly getMissingCarRegsQueryHandler: GetMissingRSCarRegsQueryHandler

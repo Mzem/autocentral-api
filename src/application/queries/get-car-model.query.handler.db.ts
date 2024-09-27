@@ -7,7 +7,7 @@ import { NotFoundFailure } from '../../utils/result/error'
 import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
-import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
+import { CarMakeQueryModel } from './query-models'
 import { mapMakeSQLToQueryModel } from './mappers'
 
 class RelatedModel {
@@ -112,21 +112,21 @@ export class CarModelDetailQueryModel {
   relatedModels: RelatedModel[]
 }
 
-export interface GetCarModelDetailQuery extends Query {
+export interface GetCarModelQuery extends Query {
   modelId: string
 }
 
 @Injectable()
-export class GetCarModelDetailQueryHandler extends QueryHandler<
-  GetCarModelDetailQuery,
+export class GetCarModelQueryHandler extends QueryHandler<
+  GetCarModelQuery,
   CarModelDetailQueryModel
 > {
   constructor() {
-    super('GetCarModelDetailQueryHandler')
+    super('GetCarModelQueryHandler')
   }
 
   async handle(
-    query: GetCarModelDetailQuery
+    query: GetCarModelQuery
   ): Promise<Result<CarModelDetailQueryModel>> {
     const engineSQL = await CarEngineSqlModel.findByPk(query.modelId, {
       include: [
@@ -142,46 +142,52 @@ export class GetCarModelDetailQueryHandler extends QueryHandler<
       return NotFoundFailure('Car Engine Model', query.modelId)
     }
 
-    return success({
-      id: engineSQL.id,
-      make: mapMakeSQLToQueryModel(engineSQL.make!),
-      model: engineSQL.model,
-      fromYear: engineSQL.fromYear ?? undefined,
-      type: engineSQL.type ?? undefined,
-      engineName: engineSQL.engineName ?? undefined,
-      cylinder: engineSQL.cylinder ?? undefined,
-      fuel: engineSQL.fuel ?? undefined,
-      hp: engineSQL.hp ?? undefined,
-      hpStage1: engineSQL.hpStage1 ?? undefined,
-      hpStage2: engineSQL.hpStage2 ?? undefined,
-      torque: engineSQL.torque ?? undefined,
-      torqueStage1: engineSQL.torqueStage1 ?? undefined,
-      torqueStage2: engineSQL.torqueStage2 ?? undefined,
-      urlSource:
-        engineSQL.urlSourceShiftech || engineSQL.urlSourceBRPerf || undefined,
-      relatedModels: engineSQL.models.map(model => ({
-        id: model.id,
-        fromYear: model.fromYear,
-        model: model.model,
-        engineDetail: model.engineDetail ?? undefined,
-        cylinder: model.cylinder ?? undefined,
-        body: model.body ?? undefined,
-        hp: model.hp?.toString() ?? undefined,
-        torque: model.torque?.toString() ?? undefined,
-        acceleration: model.acceleration ?? undefined,
-        topSpeed: model.topSpeed ?? undefined,
-        engineType: model.engineType ?? undefined,
-        driveType: model.driveType ?? undefined,
-        gearbox: model.gearbox ?? undefined,
-        weight: model.weight ?? undefined,
-        height: model.height ?? undefined,
-        width: model.width ?? undefined,
-        length: model.length ?? undefined,
-        fuelSystem: model.fuelSystem ?? undefined,
-        fuelHighway: model.fuelHighway ?? undefined,
-        fuelUrban: model.fuelUrban ?? undefined,
-        fuelCombined: model.fuelCombined ?? undefined
-      }))
-    })
+    return success(fromEngineSqlToQueryModel(engineSQL))
+  }
+}
+
+export function fromEngineSqlToQueryModel(
+  engineSQL: CarEngineSqlModel
+): CarModelDetailQueryModel {
+  return {
+    id: engineSQL.id,
+    make: mapMakeSQLToQueryModel(engineSQL.make!),
+    model: engineSQL.model,
+    fromYear: engineSQL.fromYear ?? undefined,
+    type: engineSQL.type ?? undefined,
+    engineName: engineSQL.engineName ?? undefined,
+    cylinder: engineSQL.cylinder ?? undefined,
+    fuel: engineSQL.fuel ?? undefined,
+    hp: engineSQL.hp ?? undefined,
+    hpStage1: engineSQL.hpStage1 ?? undefined,
+    hpStage2: engineSQL.hpStage2 ?? undefined,
+    torque: engineSQL.torque ?? undefined,
+    torqueStage1: engineSQL.torqueStage1 ?? undefined,
+    torqueStage2: engineSQL.torqueStage2 ?? undefined,
+    urlSource:
+      engineSQL.urlSourceShiftech || engineSQL.urlSourceBRPerf || undefined,
+    relatedModels: engineSQL.models.map(model => ({
+      id: model.id,
+      fromYear: model.fromYear,
+      model: model.model,
+      engineDetail: model.engineDetail ?? undefined,
+      cylinder: model.cylinder ?? undefined,
+      body: model.body ?? undefined,
+      hp: model.hp?.toString() ?? undefined,
+      torque: model.torque?.toString() ?? undefined,
+      acceleration: model.acceleration ?? undefined,
+      topSpeed: model.topSpeed ?? undefined,
+      engineType: model.engineType ?? undefined,
+      driveType: model.driveType ?? undefined,
+      gearbox: model.gearbox ?? undefined,
+      weight: model.weight ?? undefined,
+      height: model.height ?? undefined,
+      width: model.width ?? undefined,
+      length: model.length ?? undefined,
+      fuelSystem: model.fuelSystem ?? undefined,
+      fuelHighway: model.fuelHighway ?? undefined,
+      fuelUrban: model.fuelUrban ?? undefined,
+      fuelCombined: model.fuelCombined ?? undefined
+    }))
   }
 }

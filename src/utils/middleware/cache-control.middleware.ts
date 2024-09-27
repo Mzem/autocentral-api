@@ -4,10 +4,10 @@ import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class CacheControlMiddleware implements NestMiddleware {
-  private readonly maxAge: number
+  private readonly maxAge?: number
 
   constructor(config: ConfigService) {
-    this.maxAge = config.get('headers.maxAge')!
+    this.maxAge = config.get('headers.maxAge')
   }
 
   use(_req: Request, res: Response, next: NextFunction): void {

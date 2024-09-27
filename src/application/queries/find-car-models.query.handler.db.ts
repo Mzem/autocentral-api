@@ -6,8 +6,9 @@ import { NotFoundFailure } from '../../utils/result/error'
 import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
-import { CarMakeQueryModel } from './get-car-makes.query.handler.db'
 import { mapMakeSQLToQueryModel } from './mappers'
+import { CarMakeQueryModel } from './query-models'
+import { sortByStringField } from '../helpers'
 
 class Engine {
   @ApiProperty()
@@ -25,7 +26,7 @@ class Engine {
   @ApiProperty({ required: false })
   hp?: number
 }
-class ModelYearsListItem {
+class ModelYearListItem {
   @ApiProperty()
   year: number
   @ApiProperty({ type: Engine, isArray: true })
@@ -34,8 +35,8 @@ class ModelYearsListItem {
 class ModelListItem {
   @ApiProperty()
   modelName: string
-  @ApiProperty({ type: ModelYearsListItem, isArray: true })
-  modelYears: ModelYearsListItem[]
+  @ApiProperty({ type: ModelYearListItem, isArray: true })
+  modelYears: ModelYearListItem[]
 }
 
 export class CarModelListQueryModel {
@@ -46,21 +47,21 @@ export class CarModelListQueryModel {
   models: ModelListItem[]
 }
 
-export interface GetCarModelListQuery extends Query {
+export interface FindCarModelsQuery extends Query {
   makeId: string
 }
 
 @Injectable()
-export class GetCarModelListQueryHandler extends QueryHandler<
-  GetCarModelListQuery,
+export class FindCarModelsQueryHandler extends QueryHandler<
+  FindCarModelsQuery,
   CarModelListQueryModel
 > {
   constructor() {
-    super('GetCarModelListQueryHandler')
+    super('FindCarModelsQueryHandler')
   }
 
   async handle(
-    query: GetCarModelListQuery
+    query: FindCarModelsQuery
   ): Promise<Result<CarModelListQueryModel>> {
     const makeSQL = await CarMakeSqlModel.findByPk(query.makeId)
 
@@ -115,9 +116,14 @@ export class GetCarModelListQueryHandler extends QueryHandler<
       []
     )
 
+    const eachModelSortedByYear = groupedByModels.map(model => ({
+      ...model,
+      modelYears: sortByStringField(model.modelYears, 'year')
+    }))
+
     return success({
       make: mapMakeSQLToQueryModel(makeSQL),
-      models: groupedByModels
+      models: sortByStringField(eachModelSortedByYear, 'modelName')
     })
   }
 }

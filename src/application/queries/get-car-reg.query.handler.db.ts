@@ -29,20 +29,20 @@ export class CarRegQueryModel {
   engine?: string
 }
 
-export interface FindCarRegQuery extends Query {
+export interface GetCarRegQuery extends Query {
   reg: string
 }
 
 @Injectable()
-export class FindCarRegQueryHandler extends QueryHandler<
-  FindCarRegQuery,
+export class GetCarRegQueryHandler extends QueryHandler<
+  GetCarRegQuery,
   CarRegQueryModel
 > {
   constructor() {
-    super('FindCarRegQueryHandler')
+    super('GetCarRegQueryHandler')
   }
 
-  async handle(query: FindCarRegQuery): Promise<Result<CarRegQueryModel>> {
+  async handle(query: GetCarRegQuery): Promise<Result<CarRegQueryModel>> {
     const regSQL = await CarRegistrationSqlModel.findOne({
       where: { registration: query.reg }
     })

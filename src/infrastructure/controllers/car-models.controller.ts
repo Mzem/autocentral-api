@@ -2,12 +2,12 @@ import { Controller, Get, Param, SetMetadata, UseGuards } from '@nestjs/common'
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger'
 import {
   CarModelDetailQueryModel,
-  GetCarModelDetailQueryHandler
-} from '../../application/queries/get-car-model-detail.query.handler.db'
+  GetCarModelQueryHandler
+} from '../../application/queries/get-car-model.query.handler.db'
 import {
   CarModelListQueryModel,
-  GetCarModelListQueryHandler
-} from '../../application/queries/get-car-model-list.query.handler.db'
+  FindCarModelsQueryHandler
+} from '../../application/queries/find-car-models.query.handler.db'
 import {
   ApiKeyAccessLevel,
   ApiKeyAuthGuard,
@@ -21,8 +21,8 @@ import { handleResult } from '../../utils/result/result.handler'
 @ApiTags('Car Models')
 export class CarModelsController {
   constructor(
-    private readonly getCarModelListQueryHandler: GetCarModelListQueryHandler,
-    private readonly getCarModelDetailQueryHandler: GetCarModelDetailQueryHandler
+    private readonly getCarModelListQueryHandler: FindCarModelsQueryHandler,
+    private readonly getCarModelDetailQueryHandler: GetCarModelQueryHandler
   ) {}
 
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)

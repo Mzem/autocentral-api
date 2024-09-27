@@ -152,6 +152,9 @@ export class CarPostDto extends Model {
 
   @Column({ field: 'is_featured', type: DataType.BOOLEAN })
   isFeatured: boolean
+
+  @Column({ field: 'is_expired', type: DataType.BOOLEAN })
+  isExpired: boolean
 }
 
 @Table({ timestamps: false, tableName: 'car_post' })

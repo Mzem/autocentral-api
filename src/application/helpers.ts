@@ -59,3 +59,36 @@ export function capitalize(input: string): string {
 export function fromStringToNumber(string: string): number {
   return Number(string.toString().replace(/\D+/g, ''))
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sortByStringField<T extends Record<string, any>>(
+  array: T[],
+  fieldName: string,
+  order = 'asc'
+): T[] {
+  return array.sort((a, b) => {
+    const fieldA =
+      a[fieldName] && ['string', 'number'].includes(typeof a[fieldName])
+        ? a[fieldName].toString().toLowerCase()
+        : undefined
+    const fieldB =
+      b[fieldName] && ['string', 'number'].includes(typeof b[fieldName])
+        ? b[fieldName].toString().toLowerCase()
+        : undefined
+
+    if (!fieldA) {
+      return 1
+    }
+    if (!fieldB) {
+      return -1
+    }
+
+    if (fieldA < fieldB) {
+      return order === 'asc' ? -1 : 1
+    }
+    if (fieldA > fieldB) {
+      return order === 'asc' ? 1 : -1
+    }
+    return 0
+  })
+}

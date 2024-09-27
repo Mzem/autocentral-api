@@ -51,7 +51,8 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
     let error
     let page = 0
     let nbKnownPosts = 0
-    let newPosts = 0
+    let nbNewPosts = 0
+    let nbSkippedPosts = 0
     try {
       while (page <= MAX_PAGES && nbKnownPosts < MAX_KNOWN_POSTS) {
         this.logger.debug('TAYARA SCRAPING PAGE ' + page)
@@ -59,6 +60,31 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
           const posts = await this.tayaraApiClient.getPosts(page)
 
           for (const postInfo of posts) {
+            const titleDescription =
+              (postInfo.post.title || '') +
+              ' ' +
+              (postInfo.post.description || '')
+
+            if (
+              stringContains(titleDescription, [
+                'tracteur',
+                'trakteur',
+                'trax',
+                'traks',
+                'poid lour',
+                'poid lours',
+                'poids lourd',
+                'camion om',
+                'je cherche',
+                'chauffeur',
+                'vespa',
+                'mobylette'
+              ])
+            ) {
+              nbSkippedPosts++
+              continue
+            }
+
             const postId = generateId(postInfo.post.id)
             const foundPost = await CarPostSqlModel.findByPk(postId)
 
@@ -102,6 +128,18 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               idTayara: postInfo.detail?.merchant.id || null
             }
 
+            const year = mapYear(postInfo.detail?.year)
+
+            if (
+              !year ||
+              !phoneNumber ||
+              !postInfo.post.images ||
+              postInfo.post.images.length === 0
+            ) {
+              nbSkippedPosts++
+              continue
+            }
+
             const postToUpsert: AsSql<CarPostDto> = {
               id: postId,
               source: Source.TAYARA,
@@ -111,27 +149,25 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               publishedAt: DateTime.fromISO(postInfo.post.metadata.publishedOn)
                 .toUTC()
                 .toJSDate(),
-              updatedAt: this.dateService.nowJs(),
+              updatedAt: now.toJSDate(),
               regionId,
               regionDetail: cleanStringOrNull(
                 postInfo.post.location.delegation
               ),
               phoneNumbers: phoneNumber ? [phoneNumber] : [],
-              title: cleanStringOrNull(postInfo.post.title.substring(0, 50)),
+              title: cleanStringOrNull(postInfo.post.title.substring(0, 75)),
               description: postInfo.post.description,
               images: postInfo.post.images,
               price: mapPrice(postInfo.post.price),
               make: cleanStringOrNull(postInfo.detail?.make),
               model: cleanStringOrNull(postInfo.detail?.model),
-              body: mapBody(
-                postInfo.post.title,
-                postInfo.post.description,
-                postInfo.detail?.body
+              body: mapBody(titleDescription, postInfo.detail?.body),
+              year,
+              km: mapKm(
+                postInfo.detail?.km,
+                year,
+                this.dateService.currentYear()
               ),
-              year: mapYear(postInfo.detail?.year),
-              km: postInfo.detail?.km
-                ? fromStringToNumber(postInfo.detail.km)
-                : null,
               fuel: mapFuel(postInfo.detail?.fuel),
               cv: postInfo.detail?.cv
                 ? fromStringToNumber(postInfo.detail?.cv)
@@ -143,47 +179,39 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
                 : null,
               color: mapColor(postInfo.detail?.color),
               gearbox: mapGearbox(postInfo.detail?.gearbox),
-              interiorType: mapInteriorType(postInfo.post.description),
+              interiorType: mapInteriorType(titleDescription),
               interiorColor: null,
-              transmission: mapTransmission(postInfo.post.description),
-              carPlay: stringContains(postInfo.post.description, [
+              transmission: mapTransmission(titleDescription),
+              carPlay: stringContains(titleDescription, [
                 'android',
                 'carplay',
                 'car play'
               ]),
-              bluetooth: stringContains(postInfo.post.description, [
-                'bluetooth'
-              ]),
-              sunroof: stringContains(postInfo.post.description, [
+              bluetooth: stringContains(titleDescription, ['bluetooth']),
+              sunroof: stringContains(titleDescription, [
                 'toit',
                 'panoramique',
                 'ouvrant'
               ]),
-              alarm: stringContains(postInfo.post.description, [
+              alarm: stringContains(titleDescription, [
                 'alarm',
                 'antivol',
                 'anti vol',
                 'anti-vol'
               ]),
-              acAuto: stringContains(postInfo.post.description, ['clim']),
-              ledLights: stringContains(postInfo.post.description, ['led']),
-              ledInterior: stringContains(postInfo.post.description, [
+              acAuto: stringContains(titleDescription, ['clim']),
+              ledLights: stringContains(titleDescription, ['led']),
+              ledInterior: stringContains(titleDescription, [
                 'ambian',
                 'lumier'
               ]),
-              keyless: stringContains(postInfo.post.description, [
-                'keyles',
-                'cle'
-              ]),
-              aluRims: stringContains(postInfo.post.description, [
-                'jant',
-                'alu'
-              ]),
-              warranty: stringContains(postInfo.post.description, ['garantie']),
-              camera: stringContains(postInfo.post.description, ['camera']),
-              exchange: stringContains(postInfo.post.description, ['echang']),
-              leasing: stringContains(postInfo.post.description, ['leasing']),
-              firstOwner: stringContains(postInfo.post.description, [
+              keyless: stringContains(titleDescription, ['keyles', 'cle']),
+              aluRims: stringContains(titleDescription, ['jant', 'alu']),
+              warranty: stringContains(titleDescription, ['garantie']),
+              camera: stringContains(titleDescription, ['camera']),
+              exchange: stringContains(titleDescription, ['echang']),
+              leasing: stringContains(titleDescription, ['leasing']),
+              firstOwner: stringContains(titleDescription, [
                 'premiere main',
                 'premier main',
                 '1er main',
@@ -192,7 +220,8 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
                 '1 er main'
               ]),
               carEngineId: null,
-              isFeatured: false
+              isFeatured: false,
+              isExpired: false
             }
 
             const potentialCarEngineId = await this.findCarEngineId(
@@ -202,10 +231,10 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
 
             await MerchantSqlModel.upsert(merchant)
             await CarPostSqlModel.upsert(postToUpsert)
-            newPosts++
+            nbNewPosts++
           }
         } catch (e) {
-          this.logger.error('GET ERROR ' + e)
+          this.logger.error('Mapping car post error ' + e)
           errors++
         }
         page++
@@ -224,8 +253,9 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
       result: {
         skippedRegions: Array.from(new Set(skippedRegions)),
         nbKnownPosts,
+        nbSkippedPosts,
         nbPages: page + 1,
-        newPosts,
+        newPosts: nbNewPosts,
         error
       }
     }
@@ -359,17 +389,53 @@ function mapPrice(price: string): number | null {
   return sanitized
 }
 
+function mapKm(
+  km: string | null | undefined,
+  year: number,
+  currentYear: number
+): number | null {
+  if (km === null || km === undefined) return null
+
+  const sanitizedKm = fromStringToNumber(km)
+
+  // if current year is 2024
+
+  // 2000 and older
+  if (year < 2000) {
+    if (sanitizedKm < 100) return 400000
+    if (sanitizedKm < 1000) return Number(sanitizedKm.toString() + '000')
+    if (sanitizedKm < 10000) return Number(sanitizedKm.toString() + '00')
+  }
+  // 2020 and older
+  if (year < currentYear - 3) {
+    if (sanitizedKm === 0) return null
+    if (sanitizedKm < 10) return Number(sanitizedKm.toString() + '0000')
+    if (sanitizedKm < 100) return Number(sanitizedKm.toString() + '000')
+    if (sanitizedKm < 1000) return Number(sanitizedKm.toString() + '00')
+  }
+
+  if (
+    [
+      1234, 12345, 123456, 1234567, 12345678, 1111, 2222, 11111, 22222, 999,
+      9999
+    ].includes(sanitizedKm)
+  )
+    return null
+
+  return sanitizedKm
+}
+
 function mapBody(
-  title: string,
-  description: string,
+  titleDescription: string,
   body?: string | null
 ): BodyType | null {
   if (!body) return null
 
   if (
-    stringContains(title, [
+    stringContains(titleDescription, [
       'partnair',
       'partner',
+      'partenair',
       'kango',
       'berling',
       'doblo',
@@ -381,28 +447,18 @@ function mapBody(
   )
     return BodyType.UTILITY
 
-  if (stringContains(title + ' ' + description, ['van', 'hicace', 'scenic']))
+  if (stringContains(titleDescription, ['van', 'hicace', 'scenic']))
     return BodyType.MONOSPACE_VAN
 
-  if (stringContains(title + ' ' + description, ['coupe']))
-    return BodyType.COUPE
+  if (stringContains(titleDescription, ['coupe'])) return BodyType.COUPE
 
-  if (
-    stringContains(title + ' ' + description, ['roadster', 'cabrio', 'decapo'])
-  )
+  if (stringContains(titleDescription, ['roadster', 'cabrio', 'decapo']))
     return BodyType.CABRIOLET
 
-  if (stringContains(title + ' ' + description, ['break']))
-    return BodyType.BREAK
+  if (stringContains(titleDescription, ['break'])) return BodyType.BREAK
 
   if (
-    stringContains(title + ' ' + description, [
-      'polo',
-      'ibiza',
-      'golf',
-      'leon',
-      'rio'
-    ])
+    stringContains(titleDescription, ['polo', 'ibiza', 'golf', 'leon', 'rio'])
   )
     return BodyType.COMPACT
 

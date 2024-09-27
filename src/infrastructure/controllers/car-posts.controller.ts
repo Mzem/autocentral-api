@@ -1,4 +1,11 @@
-import { Controller, Get, Query, SetMetadata, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  SetMetadata,
+  UseGuards
+} from '@nestjs/common'
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -28,6 +35,10 @@ import {
 import { handleResult } from '../../utils/result/result.handler'
 import { Fuel, Gearbox, Transmission } from '../../domain/car-model'
 import { Color, InteriorType } from '../../domain/car-post'
+import {
+  CarPostQueryModel,
+  GetCarPostQueryHandler
+} from '../../application/queries/get-car-post.query.handler.db'
 
 class FindCarPostsQP {
   @ApiProperty()
@@ -198,7 +209,8 @@ class FindCarPostsQP {
 @ApiTags('Car Posts')
 export class CarPostsController {
   constructor(
-    private readonly findCarPostsQueryHandler: FindCarPostsQueryHandler
+    private readonly findCarPostsQueryHandler: FindCarPostsQueryHandler,
+    private readonly getCarPostQueryHandler: GetCarPostQueryHandler
   ) {}
 
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
@@ -207,12 +219,24 @@ export class CarPostsController {
     type: CarPostListItemQueryModel,
     isArray: true
   })
-  async getCarReg(
+  async findCarPosts(
     @Query() queryParams: FindCarPostsQP
   ): Promise<CarPostListItemQueryModel[]> {
     const result = await this.findCarPostsQueryHandler.execute({
       ...queryParams
     })
+    return handleResult(result)
+  }
+  @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
+  @Get('/:carPostId')
+  @ApiResponse({
+    type: CarPostListItemQueryModel,
+    isArray: true
+  })
+  async getCarPostId(
+    @Param('carPostId') carPostId: string
+  ): Promise<CarPostQueryModel> {
+    const result = await this.getCarPostQueryHandler.execute({ carPostId })
     return handleResult(result)
   }
 }

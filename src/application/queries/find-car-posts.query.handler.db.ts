@@ -8,6 +8,9 @@ import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
 import { RegionSqlModel } from '../../infrastructure/sequelize/models/region.sql-model'
+import { RegionQueryModel } from './query-models'
+import { DateTime } from 'luxon'
+import { DateService } from '../../utils/date.service'
 
 const MAX_PAGE_SIZE = 20
 
@@ -18,11 +21,14 @@ export class CarPostListItemQueryModel {
   @ApiProperty()
   source: string
 
-  @ApiProperty({ required: false })
+  @ApiProperty()
   publishedAt: string
 
+  @ApiProperty()
+  publishedAtText: string
+
   @ApiProperty({ required: false })
-  region: string | undefined
+  region: RegionQueryModel | undefined
 
   @ApiProperty({ required: false })
   phone: number | undefined
@@ -109,7 +115,7 @@ export class FindCarPostsQueryHandler extends QueryHandler<
   FindCarPostsQuery,
   CarPostListItemQueryModel[]
 > {
-  constructor() {
+  constructor(private readonly dateService: DateService) {
     super('FindCarPostsQueryHandler')
   }
 
@@ -127,7 +133,7 @@ export class FindCarPostsQueryHandler extends QueryHandler<
     if (query.gearbox) filters.push({ gearbox: query.gearbox })
     if (query.interiorType) filters.push({ interiorType: query.interiorType })
     if (query.transmission) filters.push({ transmission: query.transmission })
-    if (query.transmission) filters.push({ transmission: query.transmission })
+    if (query.sunroof) filters.push({ sunroof: query.sunroof })
     if (query.carPlay) filters.push({ carPlay: true })
     if (query.bluetooth) filters.push({ bluetooth: true })
     if (query.alarm) filters.push({ alarm: true })
@@ -155,6 +161,12 @@ export class FindCarPostsQueryHandler extends QueryHandler<
       filters.push({
         year: {
           [Op.lte]: query.maxYear
+        }
+      })
+    if (query.maxKm)
+      filters.push({
+        km: {
+          [Op.lte]: query.maxKm
         }
       })
     if (query.minCV)
@@ -197,8 +209,13 @@ export class FindCarPostsQueryHandler extends QueryHandler<
         .map(postSQL => ({
           id: postSQL.id,
           source: postSQL.source,
-          publishedAt: postSQL.publishedAt.toLocaleTimeString('fr'),
-          region: postSQL.region?.name,
+          publishedAt: postSQL.publishedAt.toLocaleDateString('fr'),
+          publishedAtText: this.dateService.toRelative(
+            DateTime.fromJSDate(postSQL.publishedAt)
+          ),
+          region: postSQL.region
+            ? { id: postSQL.region.id, name: postSQL.region.name }
+            : undefined,
           phone: postSQL.phoneNumbers[0],
           title: postSQL.title ?? undefined,
           image: postSQL.images[0],
