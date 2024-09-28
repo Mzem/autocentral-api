@@ -29,7 +29,7 @@ export function fromNameToId(name: string): string {
   return name
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Remove diacritics (accents)
-    .replace(/[^\w\s]/g, '')
+    .replace(/[^\w\s]/g, '') // Remove non alphanumeric
     .replace(/\s+/g, ' ') // Remove multiple whitespaces
     .toLowerCase()
     .trim()
@@ -91,4 +91,24 @@ export function sortByStringField<T extends Record<string, any>>(
     }
     return 0
   })
+}
+
+export function stringContains(
+  string: string,
+  containedList: string[]
+): boolean {
+  for (const containedOne of containedList) {
+    if (
+      string
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics (accents)
+        .replace(/[^\w\s]/g, '')
+        .replace(/\s+/g, ' ')
+        .toLowerCase()
+        .includes(containedOne)
+    ) {
+      return true
+    }
+  }
+  return false
 }

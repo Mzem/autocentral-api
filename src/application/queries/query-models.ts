@@ -22,7 +22,7 @@ export class RegionQueryModel {
   name: string
 }
 
-export class MerchantQueryModel {
+export class MerchantListItemQueryModel {
   @ApiProperty()
   id: string
 

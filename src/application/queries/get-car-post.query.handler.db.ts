@@ -1,23 +1,22 @@
 import { Injectable } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
-import { Gearbox } from '../../domain/car-model'
+import { DateTime } from 'luxon'
 import { CarEngineSqlModel } from '../../infrastructure/sequelize/models/car-engine.sql-model'
+import { CarMakeSqlModel } from '../../infrastructure/sequelize/models/car-make.sql-model'
+import { CarModelSqlModel } from '../../infrastructure/sequelize/models/car-model.sql-model'
 import { CarPostSqlModel } from '../../infrastructure/sequelize/models/car-post.sql-model'
 import { MerchantSqlModel } from '../../infrastructure/sequelize/models/merchant.sql-model'
 import { RegionSqlModel } from '../../infrastructure/sequelize/models/region.sql-model'
+import { DateService } from '../../utils/date.service'
+import { NotFoundFailure } from '../../utils/result/error'
 import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
-import { MerchantQueryModel, RegionQueryModel } from './query-models'
 import {
   CarModelDetailQueryModel,
   fromEngineSqlToQueryModel
 } from './get-car-model.query.handler.db'
-import { NotFoundFailure } from '../../utils/result/error'
-import { CarMakeSqlModel } from '../../infrastructure/sequelize/models/car-make.sql-model'
-import { CarModelSqlModel } from '../../infrastructure/sequelize/models/car-model.sql-model'
-import { DateTime } from 'luxon'
-import { DateService } from '../../utils/date.service'
+import { MerchantListItemQueryModel, RegionQueryModel } from './query-models'
 
 export class CarPostQueryModel {
   @ApiProperty()
@@ -35,11 +34,11 @@ export class CarPostQueryModel {
   @ApiProperty()
   publishedAtText: string
 
-  @ApiProperty({ required: false })
-  region: RegionQueryModel | undefined
+  @ApiProperty()
+  region: RegionQueryModel
 
-  @ApiProperty({ required: false })
-  merchant: MerchantQueryModel | undefined
+  @ApiProperty()
+  merchant: MerchantListItemQueryModel
 
   @ApiProperty({ required: false })
   carEngine: CarModelDetailQueryModel | undefined
@@ -84,7 +83,7 @@ export class CarPostQueryModel {
   engine: string | undefined
 
   @ApiProperty({ required: false })
-  gearbox: Gearbox | undefined
+  gearbox: string | undefined
 
   @ApiProperty({ required: false })
   interiorType: string | undefined
@@ -154,8 +153,8 @@ export class GetCarPostQueryHandler extends QueryHandler<
   async handle(query: GetCarPostQuery): Promise<Result<CarPostQueryModel>> {
     const postSQL = await CarPostSqlModel.findByPk(query.carPostId, {
       include: [
-        { model: RegionSqlModel, required: false },
-        { model: MerchantSqlModel, required: false },
+        { model: RegionSqlModel, required: true },
+        { model: MerchantSqlModel, required: true },
         {
           model: CarEngineSqlModel,
           required: false,
@@ -182,17 +181,13 @@ export class GetCarPostQueryHandler extends QueryHandler<
       publishedAtText: this.dateService.toRelative(
         DateTime.fromJSDate(postSQL.publishedAt)
       ),
-      region: postSQL.region
-        ? { id: postSQL.region.id, name: postSQL.region.name }
-        : undefined,
-      merchant: postSQL.merchant
-        ? {
-            id: postSQL.merchant.id,
-            name: postSQL.merchant.name,
-            avatar: postSQL.merchant.avatar ?? undefined,
-            isShop: postSQL.merchant.isShop
-          }
-        : undefined,
+      region: { id: postSQL.region!.id, name: postSQL.region!.name },
+      merchant: {
+        id: postSQL.merchant!.id,
+        name: postSQL.merchant!.name,
+        avatar: postSQL.merchant!.avatar ?? undefined,
+        isShop: postSQL.merchant!.isShop
+      },
       carEngine: postSQL.carEngine
         ? fromEngineSqlToQueryModel(postSQL.carEngine)
         : undefined,

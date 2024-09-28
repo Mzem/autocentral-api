@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
-import { Op, WhereOptions } from 'sequelize'
+import { Op, Sequelize, WhereOptions } from 'sequelize'
 import { Fuel, Gearbox, Transmission } from '../../domain/car-model'
 import { Color, InteriorType } from '../../domain/car-post'
 import { CarPostSqlModel } from '../../infrastructure/sequelize/models/car-post.sql-model'
@@ -8,9 +8,11 @@ import { Result, success } from '../../utils/result/result'
 import { Query } from '../types/query'
 import { QueryHandler } from '../types/query-handler'
 import { RegionSqlModel } from '../../infrastructure/sequelize/models/region.sql-model'
-import { RegionQueryModel } from './query-models'
+import { MerchantListItemQueryModel, RegionQueryModel } from './query-models'
 import { DateTime } from 'luxon'
 import { DateService } from '../../utils/date.service'
+import { MerchantSqlModel } from '../../infrastructure/sequelize/models/merchant.sql-model'
+import { SequelizeInjectionToken } from '../../infrastructure/sequelize/providers'
 
 const MAX_PAGE_SIZE = 20
 
@@ -27,8 +29,11 @@ export class CarPostListItemQueryModel {
   @ApiProperty()
   publishedAtText: string
 
-  @ApiProperty({ required: false })
-  region: RegionQueryModel | undefined
+  @ApiProperty()
+  region: RegionQueryModel
+
+  @ApiProperty()
+  merchant: MerchantListItemQueryModel
 
   @ApiProperty({ required: false })
   phone: number | undefined
@@ -64,7 +69,7 @@ export class CarPostListItemQueryModel {
   engine: string | undefined
 
   @ApiProperty({ required: false })
-  gearbox: Gearbox | undefined
+  gearbox: string | undefined
 
   @ApiProperty({ required: false })
   exchange: boolean | undefined
@@ -108,6 +113,8 @@ export interface FindCarPostsQuery extends Query {
   leasing?: boolean
   camera?: boolean
   firstOwner?: boolean
+  isShop?: boolean
+  q?: string
 }
 
 @Injectable()
@@ -115,7 +122,10 @@ export class FindCarPostsQueryHandler extends QueryHandler<
   FindCarPostsQuery,
   CarPostListItemQueryModel[]
 > {
-  constructor(private readonly dateService: DateService) {
+  constructor(
+    private readonly dateService: DateService,
+    @Inject(SequelizeInjectionToken) private readonly sequelize: Sequelize
+  ) {
     super('FindCarPostsQueryHandler')
   }
 
@@ -194,6 +204,16 @@ export class FindCarPostsQueryHandler extends QueryHandler<
         }
       })
 
+    if (query.q) {
+      filters.push(
+        this.sequelize.literal(
+          `(SIMILARITY(title, :searchQuery) > 0.6 OR description ILIKE '%' || :searchQuery || '%' OR SIMILARITY(CONCAT(make, ' ', model), :searchQuery) > 0.6 OR SIMILARITY(model, :searchQuery) > 0.7)`
+        )
+      )
+    }
+
+    const whereShop = query.isShop ? { where: { isShop: true } } : {}
+
     const postsSQL = await CarPostSqlModel.findAll({
       order: [['published_at', 'DESC']],
       limit: MAX_PAGE_SIZE,
@@ -201,7 +221,17 @@ export class FindCarPostsQueryHandler extends QueryHandler<
       where: {
         [Op.and]: filters
       },
-      include: [{ model: RegionSqlModel, required: false }]
+      include: [
+        { model: RegionSqlModel, required: true },
+        {
+          model: MerchantSqlModel,
+          required: true,
+          duplicating: true,
+          attributes: ['id', 'name', 'avatar', 'isShop'],
+          ...whereShop
+        }
+      ],
+      replacements: { searchQuery: query.q }
     })
 
     return success(
@@ -213,9 +243,15 @@ export class FindCarPostsQueryHandler extends QueryHandler<
           publishedAtText: this.dateService.toRelative(
             DateTime.fromJSDate(postSQL.publishedAt)
           ),
-          region: postSQL.region
-            ? { id: postSQL.region.id, name: postSQL.region.name }
-            : undefined,
+          region: { id: postSQL.region!.id, name: postSQL.region!.name },
+          merchant: {
+            id: postSQL.merchant!.id,
+            name: postSQL.merchant!.name.toLowerCase().includes('anonym')
+              ? ''
+              : postSQL.merchant!.name,
+            avatar: postSQL.merchant!.avatar ?? undefined,
+            isShop: postSQL.merchant!.isShop
+          },
           phone: postSQL.phoneNumbers[0],
           title: postSQL.title ?? undefined,
           image: postSQL.images[0],

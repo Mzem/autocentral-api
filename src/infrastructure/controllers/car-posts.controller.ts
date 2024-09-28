@@ -201,6 +201,16 @@ class FindCarPostsQP {
   @Type(() => Boolean)
   @IsOptional()
   firstOwner: boolean
+  @ApiPropertyOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  @IsOptional()
+  isShop: boolean
+  @ApiPropertyOptional()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  q: string
 }
 
 @UseGuards(ApiKeyAuthGuard)

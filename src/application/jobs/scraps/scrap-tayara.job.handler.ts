@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { DateTime } from 'luxon'
-import { QueryTypes, Sequelize } from 'sequelize'
-import { Fuel, Gearbox, Transmission } from '../../../domain/car-model'
-import { BodyType, Color, InteriorType, Source } from '../../../domain/car-post'
+import { Op, QueryTypes, Sequelize } from 'sequelize'
+import { Source } from '../../../domain/car-post'
 import { JobPlanner, ProcessJobType } from '../../../domain/job-planner'
 import { Merchant } from '../../../domain/merchant'
 import { Region } from '../../../domain/region'
@@ -23,12 +22,29 @@ import {
   cleanString,
   cleanStringOrNull,
   fromNameToId,
-  fromStringToNumber
+  fromStringToNumber,
+  stringContains
 } from '../../helpers'
 import { Job } from '../../types/job'
 import { JobHandler } from '../../types/job-handler'
 import { extractCylinder } from '../update-car-engines-br-perf.job.handler'
+import {
+  cleanTitle,
+  generateId,
+  isPostIgnored,
+  mapBody,
+  mapColor,
+  mapFuel,
+  mapGearbox,
+  mapInteriorType,
+  mapKm,
+  mapPhoneNumber,
+  mapPrice,
+  mapTransmission,
+  mapYear
+} from './helpers'
 
+const source = 'TAYARA'
 const MAX_PAGES = 5
 const MAX_KNOWN_POSTS = 3
 let errors = 0
@@ -66,26 +82,17 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               (postInfo.post.description || '')
 
             if (
-              stringContains(titleDescription, [
-                'tracteur',
-                'trakteur',
-                'trax',
-                'traks',
-                'poid lour',
-                'poid lours',
-                'poids lourd',
-                'camion om',
-                'je cherche',
-                'chauffeur',
-                'vespa',
-                'mobylette'
-              ])
+              isPostIgnored(
+                titleDescription,
+                postInfo.post.title,
+                postInfo.detail?.make
+              )
             ) {
               nbSkippedPosts++
               continue
             }
 
-            const postId = generateId(postInfo.post.id)
+            const postId = generateId(postInfo.post.id, source)
             const foundPost = await CarPostSqlModel.findByPk(postId)
 
             if (foundPost) {
@@ -140,6 +147,18 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               continue
             }
 
+            const km = mapKm(
+              postInfo.detail?.km,
+              year,
+              this.dateService.currentYear()
+            )
+            const price = mapPrice(postInfo.post.price)
+
+            this.logger.debug(postInfo.detail?.km)
+            this.logger.debug(km)
+            this.logger.debug(postInfo.post.price)
+            this.logger.debug(price)
+
             const postToUpsert: AsSql<CarPostDto> = {
               id: postId,
               source: Source.TAYARA,
@@ -155,19 +174,15 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
                 postInfo.post.location.delegation
               ),
               phoneNumbers: phoneNumber ? [phoneNumber] : [],
-              title: cleanStringOrNull(postInfo.post.title.substring(0, 75)),
+              title: cleanTitle(postInfo.post.title),
               description: postInfo.post.description,
               images: postInfo.post.images,
-              price: mapPrice(postInfo.post.price),
+              price,
               make: cleanStringOrNull(postInfo.detail?.make),
               model: cleanStringOrNull(postInfo.detail?.model),
               body: mapBody(titleDescription, postInfo.detail?.body),
               year,
-              km: mapKm(
-                postInfo.detail?.km,
-                year,
-                this.dateService.currentYear()
-              ),
+              km,
               fuel: mapFuel(postInfo.detail?.fuel),
               cv: postInfo.detail?.cv
                 ? fromStringToNumber(postInfo.detail?.cv)
@@ -229,9 +244,29 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
             )
             postToUpsert.carEngineId = potentialCarEngineId
 
-            await MerchantSqlModel.upsert(merchant)
-            await CarPostSqlModel.upsert(postToUpsert)
-            nbNewPosts++
+            // TODO GET TO CHECK IF EXISTING RECENT POST WITH SIMILAIR DETAILS + MERCHANT
+            const similarPosts = await CarPostSqlModel.findAll({
+              where: {
+                [Op.or]: [
+                  {
+                    title: postToUpsert.title,
+                    merchantId: postToUpsert.merchantId
+                  },
+                  {
+                    merchantId: postToUpsert.merchantId,
+                    km: postToUpsert.km,
+                    price: postToUpsert.price,
+                    cv: postToUpsert.cv,
+                    year: postToUpsert.year
+                  }
+                ]
+              }
+            })
+            if (similarPosts.length === 0) {
+              await MerchantSqlModel.upsert(merchant)
+              await CarPostSqlModel.upsert(postToUpsert)
+              nbNewPosts++
+            }
           }
         } catch (e) {
           this.logger.error('Mapping car post error ' + e)
@@ -339,257 +374,4 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
         ).engineId
       : null
   }
-}
-
-function stringContains(string: string, containedList: string[]): boolean {
-  for (const containedOne of containedList) {
-    if (
-      string
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics (accents)
-        .replace(/[^\w\s]/g, '')
-        .replace(/\s+/g, ' ')
-        .toLowerCase()
-        .includes(containedOne)
-    ) {
-      return true
-    }
-  }
-  return false
-}
-
-function generateId(postId: string): string {
-  return `TAYARA-${postId}`
-}
-
-function mapInteriorType(description: string): InteriorType | null {
-  if (stringContains(description, ['simili'])) return InteriorType.LEATHERETTE
-  if (stringContains(description, ['cuir'])) return InteriorType.LEATHER
-  if (stringContains(description, ['alcant'])) return InteriorType.ALCANTARA
-  if (stringContains(description, ['tissu'])) return InteriorType.FABRIC
-
-  return null
-}
-
-function mapPrice(price: string): number | null {
-  const sanitized = fromStringToNumber(price)
-  if (
-    sanitized === 0 ||
-    sanitized.toString().length === 1 ||
-    (sanitized.toString().length === 4 &&
-      !sanitized.toString().includes('00')) ||
-    sanitized.toString().includes('123') ||
-    sanitized.toString().includes('111') ||
-    sanitized.toString().includes('999')
-  )
-    return null
-  if (sanitized.toString().length === 2 || sanitized.toString().length === 3)
-    return Number(sanitized.toString() + '000')
-
-  return sanitized
-}
-
-function mapKm(
-  km: string | null | undefined,
-  year: number,
-  currentYear: number
-): number | null {
-  if (km === null || km === undefined) return null
-
-  const sanitizedKm = fromStringToNumber(km)
-
-  // if current year is 2024
-
-  // 2000 and older
-  if (year < 2000) {
-    if (sanitizedKm < 100) return 400000
-    if (sanitizedKm < 1000) return Number(sanitizedKm.toString() + '000')
-    if (sanitizedKm < 10000) return Number(sanitizedKm.toString() + '00')
-  }
-  // 2020 and older
-  if (year < currentYear - 3) {
-    if (sanitizedKm === 0) return null
-    if (sanitizedKm < 10) return Number(sanitizedKm.toString() + '0000')
-    if (sanitizedKm < 100) return Number(sanitizedKm.toString() + '000')
-    if (sanitizedKm < 1000) return Number(sanitizedKm.toString() + '00')
-  }
-
-  if (
-    [
-      1234, 12345, 123456, 1234567, 12345678, 1111, 2222, 11111, 22222, 999,
-      9999
-    ].includes(sanitizedKm)
-  )
-    return null
-
-  return sanitizedKm
-}
-
-function mapBody(
-  titleDescription: string,
-  body?: string | null
-): BodyType | null {
-  if (!body) return null
-
-  if (
-    stringContains(titleDescription, [
-      'partnair',
-      'partner',
-      'partenair',
-      'kango',
-      'berling',
-      'doblo',
-      'dok',
-      'cady',
-      'caddy',
-      'caddy'
-    ])
-  )
-    return BodyType.UTILITY
-
-  if (stringContains(titleDescription, ['van', 'hicace', 'scenic']))
-    return BodyType.MONOSPACE_VAN
-
-  if (stringContains(titleDescription, ['coupe'])) return BodyType.COUPE
-
-  if (stringContains(titleDescription, ['roadster', 'cabrio', 'decapo']))
-    return BodyType.CABRIOLET
-
-  if (stringContains(titleDescription, ['break'])) return BodyType.BREAK
-
-  if (
-    stringContains(titleDescription, ['polo', 'ibiza', 'golf', 'leon', 'rio'])
-  )
-    return BodyType.COMPACT
-
-  const sanitized = cleanString(body)
-
-  switch (sanitized) {
-    case 'Compacte':
-      return BodyType.COMPACT
-    case 'Berline':
-      return BodyType.BERLINE
-    case 'Cabriolet':
-      return BodyType.CABRIOLET
-    case '4 x 4':
-      return BodyType.SUV
-    case 'Monospace':
-      return BodyType.MONOSPACE_VAN
-    case 'Utilitaire':
-      return BodyType.UTILITY
-    case 'Pick up':
-      return BodyType.PICKUP
-  }
-  return null
-}
-
-function mapTransmission(description: string): Transmission | null {
-  if (
-    stringContains(description, [
-      'integral',
-      '4 motion',
-      '4motion',
-      '4matic',
-      '4 matic',
-      'x drive',
-      'xdrive',
-      'awd',
-      '4wd',
-      '4 wd',
-      '4 roue',
-      '4roue',
-      'quatre roue'
-    ])
-  )
-    return Transmission.AWD
-  return null
-}
-
-function mapGearbox(gearbox: string | null | undefined): Gearbox | null {
-  const cleaned = cleanStringOrNull(gearbox)
-
-  switch (cleaned) {
-    case 'Automatique':
-      return Gearbox.AUTO
-    case 'Manuelle':
-      return Gearbox.MANUAL
-    default:
-      return null
-  }
-}
-
-function mapColor(color: string | null | undefined): Color | null {
-  const cleaned = cleanStringOrNull(color)
-
-  switch (cleaned) {
-    case 'Argent':
-    case 'Gris':
-      return Color.GREY
-    case 'Beige':
-    case 'Camel':
-    case 'Doré':
-    case 'Marron':
-      return Color.BROWN
-    case 'Blanc':
-      return Color.WHITE
-    case 'Bleu':
-    case 'Corail':
-      return Color.BLUE
-    case 'Jaune':
-      return Color.YELLOW
-    case 'Noir':
-      return Color.BLACK
-    case 'Orange':
-      return Color.ORANGE
-    case 'Rose':
-      return Color.PINK
-    case 'Rouge':
-      return Color.RED
-    case 'Vert':
-      return Color.GREEN
-    case 'Violet':
-      return Color.PURPLE
-    default:
-      return null
-  }
-}
-
-function mapFuel(fuel: string | null | undefined): Fuel | null {
-  const cleaned = cleanStringOrNull(fuel)
-
-  switch (cleaned) {
-    case 'Essence':
-      return Fuel.ESSENCE
-    case 'Diesel':
-      return Fuel.DIESEL
-    case 'Hybride':
-      return Fuel.HYBRID
-    case 'Hybride Diesel':
-      return Fuel.DIESEL_HYBRID
-    case 'Hybride Essence':
-      return Fuel.ESSENCE_HYBRID
-    case 'Electrique':
-      return Fuel.ELECTRIQUE
-    default:
-      return null
-  }
-}
-
-function mapYear(year: string | undefined | null): number | null {
-  if (!year) return null
-  const tmpYear = fromStringToNumber(year)
-  const potentialYear = tmpYear.toString().slice(-4)
-  if (potentialYear.length !== 4 || isNaN(Number(potentialYear))) return null
-
-  return Number(potentialYear)
-}
-
-function mapPhoneNumber(phone: string | undefined | null): number | null {
-  if (!phone) return null
-  const tmpPhone = fromStringToNumber(phone)
-  const potentialPhoneNumber = tmpPhone.toString().slice(-8)
-  if (potentialPhoneNumber.length !== 8 || isNaN(Number(potentialPhoneNumber)))
-    return null
-
-  return Number(potentialPhoneNumber)
 }
