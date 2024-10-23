@@ -970,8 +970,8 @@ __metadata:
   linkType: hard
 
 "@nestjs/common@npm:^10.3.2":
-  version: 10.4.4
-  resolution: "@nestjs/common@npm:10.4.4"
+  version: 10.4.6
+  resolution: "@nestjs/common@npm:10.4.6"
   dependencies:
     iterare: "npm:1.2.1"
     tslib: "npm:2.7.0"
@@ -986,7 +986,7 @@ __metadata:
       optional: true
     class-validator:
       optional: true
-  checksum: 10/55e5100f90cea5b5b14796a294d3d9124fac0b08173f38d776509a555d2631986133c7277c8bcf0d4d056af0bfeda533def10351aebca621e43589bb791bded4
+  checksum: 10/bf1887715a8612e207c621a00761c0caed5c32f3fce9f6abd7de6a9c6f0217f825696f4dde218952017967493e47bd6fcc5b85d6f5d7fe82e31be9811179d2f5
   languageName: node
   linkType: hard
 
