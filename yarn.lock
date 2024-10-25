@@ -1789,11 +1789,11 @@ __metadata:
   linkType: hard
 
 "@types/bull@npm:^4.10.0":
-  version: 4.10.0
-  resolution: "@types/bull@npm:4.10.0"
+  version: 4.10.4
+  resolution: "@types/bull@npm:4.10.4"
   dependencies:
     bull: "npm:*"
-  checksum: 10/1f8cd1a084a7e67b208384381c6baee940b256fbb651daafcb463d818174a44421212a55a317784d6cfae1b0c26e6ac623ed4ff7703d5c3938245af1930e3596
+  checksum: 10/e9aa172c048adef61c17997f6ad5b18b51f1a1dcb79c43072409f56d09cddda8210a81e40b948be541031dec93faba143815db16d983736bedbbc8ff45b6aac9
   languageName: node
   linkType: hard
 
