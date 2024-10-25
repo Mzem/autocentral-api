@@ -922,13 +922,13 @@ __metadata:
   linkType: hard
 
 "@nestjs/axios@npm:^3.0.2":
-  version: 3.0.3
-  resolution: "@nestjs/axios@npm:3.0.3"
+  version: 3.1.0
+  resolution: "@nestjs/axios@npm:3.1.0"
   peerDependencies:
     "@nestjs/common": ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
     axios: ^1.3.1
     rxjs: ^6.0.0 || ^7.0.0
-  checksum: 10/a62c45d2a532df2f0e5a100750d29134e5fcd6d359cae7559ccd97775a27620dc0ec650addfda6f99160f7f52b061754cdeb61de85060cb4526de2c01c31a80b
+  checksum: 10/b5ff6baa5aae0bdf75fac4fc4e8d71314f0e0ba370c6d9229f59135d3688bd979fee7ed8616b131454e2c0c6f969057bfca057bc6b8094759b97e3ce346bd926
   languageName: node
   linkType: hard
 
