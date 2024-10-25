@@ -1437,13 +1437,13 @@ __metadata:
   linkType: hard
 
 "@salesforce/ts-sinon@npm:^1.4.19":
-  version: 1.4.27
-  resolution: "@salesforce/ts-sinon@npm:1.4.27"
+  version: 1.4.28
+  resolution: "@salesforce/ts-sinon@npm:1.4.28"
   dependencies:
     "@salesforce/ts-types": "npm:^2.0.12"
     sinon: "npm:^5.1.1"
-    tslib: "npm:^2.7.0"
-  checksum: 10/96fb285ffadcb739ceded2f7c33de6881453fb9af542fdc4ca96608c24e3d49020e4cdac2e3e2f87f3bfda8f26766f4ebb8cc596b7b028a88c464a52d36b12a4
+    tslib: "npm:^2.8.0"
+  checksum: 10/9e2d14a4f146be2167c4944569de2df5728f3a8c35ba481d2a90bc647071164307372010bb642444680899b7faf364239c045009587298d130cb95fe7df97001
   languageName: node
   linkType: hard
 
@@ -11358,7 +11358,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.7.0, tslib@npm:^2.1.0, tslib@npm:^2.7.0":
+"tslib@npm:2.7.0, tslib@npm:^2.1.0":
   version: 2.7.0
   resolution: "tslib@npm:2.7.0"
   checksum: 10/9a5b47ddac65874fa011c20ff76db69f97cf90c78cff5934799ab8894a5342db2d17b4e7613a087046bc1d133d21547ddff87ac558abeec31ffa929c88b7fce6
@@ -11369,6 +11369,13 @@ __metadata:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: 10/7dbf34e6f55c6492637adb81b555af5e3b4f9cc6b998fb440dac82d3b42bdc91560a35a5fb75e20e24a076c651438234da6743d139e4feabf0783f3cdfe1dddb
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "tslib@npm:2.8.0"
+  checksum: 10/1bc7c43937477059b4d26f2dbde7e49ef0fb4f38f3014e0603eaea76d6a885742c8b1762af45949145e5e7408a736d20ded949da99dabc8ccba1fc5531d2d927
   languageName: node
   linkType: hard
 
