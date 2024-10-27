@@ -1,4 +1,4 @@
-import { Controller, Get, SetMetadata, UseGuards } from '@nestjs/common'
+import { Controller, Get, Header, SetMetadata, UseGuards } from '@nestjs/common'
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger'
 import { GetCarMakesQueryHandler } from '../../application/queries/get-car-makes.query.handler.db'
 import {
@@ -20,6 +20,7 @@ export class CarMakesController {
 
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
   @Get('/')
+  @Header('Cache-Control', 'max-age=86400')
   @ApiResponse({
     type: CarMakeQueryModel,
     isArray: true

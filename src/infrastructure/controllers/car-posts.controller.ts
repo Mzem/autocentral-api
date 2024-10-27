@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   Param,
   Query,
   SetMetadata,
@@ -232,6 +233,7 @@ export class CarPostsController {
 
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
   @Get('/')
+  @Header('Cache-Control', 'max-age=60')
   @ApiResponse({
     type: CarPostListItemQueryModel,
     isArray: true
@@ -246,6 +248,7 @@ export class CarPostsController {
   }
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
   @Get('/:carPostId')
+  @Header('Cache-Control', 'max-age=3600')
   @ApiResponse({
     type: CarPostListItemQueryModel,
     isArray: true
