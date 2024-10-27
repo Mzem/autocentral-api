@@ -7,18 +7,18 @@ volumes:
 services:
   apidb:
     image: postgis/postgis:16-3.4-alpine
-    container_name: jsautodb
+    container_name: autocentralpostgre
     ports:
       - "55555:5432"
     environment:
-      POSTGRES_USER: jsauto
-      POSTGRES_PASSWORD: jsauto
-      POSTGRES_DB: jsautodb
+      POSTGRES_USER: autocentral
+      POSTGRES_PASSWORD: autocentral
+      POSTGRES_DB: autocentral
     volumes:
       - api-db-data:/var/lib/postgresql
   redis:
     image: docker.io/redis/redis-stack:7.2.0-v9
-    container_name: jsautoredis
+    container_name: autocentralredis
     ports:
       - '7773:6379' # c'est le redis
       - '7003:8001' # c'est le dashboard
@@ -36,5 +36,5 @@ services:
     volumes:
       - redis-data:/data
     environment:
-      REDIS_PASSWORD: jsauto
-      REDIS_ARGS: '--requirepass jsauto --appendonly yes --save 60 1 --loglevel warning'
+      REDIS_PASSWORD: autocentral
+      REDIS_ARGS: '--requirepass autocentral --appendonly yes --save 60 1 --loglevel warning'

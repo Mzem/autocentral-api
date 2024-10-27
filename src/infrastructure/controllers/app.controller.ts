@@ -15,7 +15,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return 'JSAUTO API'
+    return 'AUTOCENTRAL.TN API'
   }
 
   @Get('health')

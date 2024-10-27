@@ -1,8 +1,8 @@
 {
-  "name": "jsauto-api",
+  "name": "autocentral-api",
   "private": true,
   "version": "1.0.0",
-  "license": "jsauto",
+  "license": "autocentral",
   "engines": {
     "node": "20.15.0"
   },
@@ -24,7 +24,7 @@
     "start:prod": "node dist/main",
     "start:prod:worker": "WORKER_MODE=true node dist/main",
     "start:db": "docker compose up -d",
-    "test:local": "yarn start:db && DATABASE_URL=postgresql://jsauto:jsauto@localhost:55555/jsautodb mocha 'test/**/*.test.ts' --exit --timeout 10000",
+    "test:local": "yarn start:db && DATABASE_URL=postgresql://autocentral:autocentral@localhost:55555/autocentral mocha 'test/**/*.test.ts' --exit --timeout 10000",
     "cover": "nyc yarn test:local",
     "cover:report": "nyc report --reporter=lcovonly",
     "test": "yarn cover && yarn cover:report",

@@ -15,7 +15,7 @@ export class DatabaseForTesting {
     const { host, port, database, user, password } = parse(
       // eslint-disable-next-line no-process-env
       process.env.DATABASE_URL ||
-        'postgresql://jsauto:jsauto@localhost:55555/jsautodb'
+        'postgresql://autocentral:autocentral@localhost:55555/autocentral'
     )
     this.sequelize = new Sequelize({
       host: host as string,

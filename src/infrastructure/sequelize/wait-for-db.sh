@@ -5,10 +5,10 @@ max_attempts=20
 
 APIDB_NAME=$(docker compose ps | grep apidb | cut -f1 -d ' ')
 if [[ -z "$APIDB_NAME" ]]; then
-  echo local API DB seems not started! >&2
+  echo local API DB not started! >&2
   exit 1
 fi
-until $(docker exec -i ${APIDB_NAME} psql --dbname jsautodb -U jsauto -h localhost  -c 'SELECT 1' &>/dev/null); do
+until $(docker exec -i ${APIDB_NAME} psql --dbname autocentral -U autocentral -h localhost  -c 'SELECT 1' &>/dev/null); do
   if [ ${attempt_counter} -eq ${max_attempts} ];then
     echo "Max attempts reached"
     exit 1

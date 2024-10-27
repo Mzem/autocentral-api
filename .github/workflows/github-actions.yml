@@ -1,4 +1,4 @@
-name: PR Continuous Integration - JSAUTO API
+name: PR Continuous Integration - AUTOCENTRAL.TN API
 
 on:
   push:

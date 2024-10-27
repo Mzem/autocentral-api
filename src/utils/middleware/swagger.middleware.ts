@@ -18,7 +18,7 @@ export function useSwagger(
     name: 'X-API-KEY'
   }
   const swaggerConfigBuilder = new DocumentBuilder()
-    .setTitle('JSAUTO Api')
+    .setTitle('AUTOCENTRAL.TN Api')
     .setVersion('1.0')
     .addSecurity('api_key', apiKeySecuritySchemeObject)
 

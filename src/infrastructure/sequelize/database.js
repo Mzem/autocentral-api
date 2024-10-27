@@ -3,9 +3,9 @@
 const { parse } = require('pg-connection-string')
 
 const defaults = {
-  username: 'jsauto',
-  password: 'jsauto',
-  database: 'jsautodb',
+  username: 'autocentral',
+  password: 'autocentral',
+  database: 'autocentral',
   port: 55555
 }
 const defaultUrl = `postgresql://${defaults.username}:${defaults.password}@localhost:${defaults.port}/${defaults.database}`

@@ -3,7 +3,7 @@ import * as APM from 'elastic-apm-node'
 
 let instance: APM.Agent | undefined
 
-const serviceName = process.env.APM_SERVICE_NAME || 'jsauto-api-local'
+const serviceName = process.env.APM_SERVICE_NAME || 'autocentral-api-local'
 const secretToken = process.env.APM_SECRET_TOKEN || ''
 const serverUrl = process.env.APM_URL || ''
 const environment = process.env.ENVIRONMENT || 'development'
