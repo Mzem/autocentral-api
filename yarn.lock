@@ -1929,7 +1929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*":
+"@types/express@npm:*, @types/express@npm:^5.0.0":
   version: 5.0.0
   resolution: "@types/express@npm:5.0.0"
   dependencies:
@@ -1941,7 +1941,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4.17.17, @types/express@npm:^4.17.21":
+"@types/express@npm:^4.17.17":
   version: 4.17.21
   resolution: "@types/express@npm:4.17.21"
   dependencies:
@@ -2997,7 +2997,7 @@ __metadata:
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/compression": "npm:^1.7.5"
     "@types/dirty-chai": "npm:^2.0.4"
-    "@types/express": "npm:^4.17.21"
+    "@types/express": "npm:^5.0.0"
     "@types/luxon": "npm:^3.4.2"
     "@types/mocha": "npm:^10.0.6"
     "@types/multer": "npm:^1.4.12"
