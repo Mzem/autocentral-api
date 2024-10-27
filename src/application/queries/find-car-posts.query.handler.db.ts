@@ -86,10 +86,9 @@ export interface FindCarPostsQuery extends Query {
   merchantId?: string
   make?: string
   model?: string
-  regionId?: string
+  regionIds?: string[]
   fuel?: Fuel
   color?: Color
-  gearbox?: Gearbox
   interiorType?: InteriorType
   transmission?: Transmission
   maxPrice?: number
@@ -100,6 +99,7 @@ export interface FindCarPostsQuery extends Query {
   maxCV?: number
   minHP?: number
   maxHP?: number
+  isAuto?: boolean
   carPlay?: boolean
   bluetooth?: boolean
   sunroof?: boolean
@@ -137,10 +137,11 @@ export class FindCarPostsQueryHandler extends QueryHandler<
     if (query.merchantId) filters.push({ merchantId: query.merchantId })
     if (query.make) filters.push({ make: query.make })
     if (query.model) filters.push({ model: query.model })
-    if (query.regionId) filters.push({ regionId: query.regionId })
+    if (query.regionIds)
+      filters.push({ [Op.or]: query.regionIds.map(regionId => ({ regionId })) })
     if (query.fuel) filters.push({ fuel: query.fuel })
     if (query.color) filters.push({ color: query.color })
-    if (query.gearbox) filters.push({ gearbox: query.gearbox })
+    if (query.isAuto) filters.push({ gearbox: Gearbox.AUTO })
     if (query.interiorType) filters.push({ interiorType: query.interiorType })
     if (query.transmission) filters.push({ transmission: query.transmission })
     if (query.sunroof) filters.push({ sunroof: query.sunroof })

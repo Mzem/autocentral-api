@@ -13,8 +13,9 @@ import {
   ApiSecurity,
   ApiTags
 } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { Transform, TransformFnParams, Type } from 'class-transformer'
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsNotEmpty,
@@ -28,17 +29,24 @@ import {
   FindCarPostsQueryHandler
 } from '../../application/queries/find-car-posts.query.handler.db'
 import {
+  CarPostQueryModel,
+  GetCarPostQueryHandler
+} from '../../application/queries/get-car-post.query.handler.db'
+import { Fuel, Transmission } from '../../domain/car-model'
+import { Color, InteriorType } from '../../domain/car-post'
+import {
   ApiKeyAccessLevel,
   ApiKeyAuthGuard,
   METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL
 } from '../../utils/auth/api-key.auth-guard'
 import { handleResult } from '../../utils/result/result.handler'
-import { Fuel, Gearbox, Transmission } from '../../domain/car-model'
-import { Color, InteriorType } from '../../domain/car-post'
-import {
-  CarPostQueryModel,
-  GetCarPostQueryHandler
-} from '../../application/queries/get-car-post.query.handler.db'
+
+function transformStringToArray(params: TransformFnParams, key: string): [] {
+  if (typeof params.value === 'string') {
+    params.obj[key] = [params.value]
+  }
+  return params.obj[key]
+}
 
 class FindCarPostsQP {
   @ApiProperty()
@@ -62,10 +70,10 @@ class FindCarPostsQP {
   @IsOptional()
   model?: string
   @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
   @IsOptional()
-  regionId?: string
+  @Transform(params => transformStringToArray(params, 'regionIds'))
+  @IsArray()
+  regionIds?: string[]
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
@@ -78,12 +86,6 @@ class FindCarPostsQP {
   @IsEnum(Color)
   @IsOptional()
   color?: Color
-  @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
-  @IsEnum(Gearbox)
-  @IsOptional()
-  gearbox?: Gearbox
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
@@ -100,117 +102,122 @@ class FindCarPostsQP {
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  maxPrice: number
+  maxPrice?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  maxKm: number
+  maxKm?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  minYear: number
+  minYear?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  maxYear: number
+  maxYear?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  minCV: number
+  minCV?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  maxCV: number
+  maxCV?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  minHP: number
+  minHP?: number
   @ApiPropertyOptional()
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  maxHP: number
+  maxHP?: number
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  carPlay: boolean
+  isAuto?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  bluetooth: boolean
+  carPlay?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  sunroof: boolean
+  bluetooth?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  alarm: boolean
+  sunroof?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  acAuto: boolean
+  alarm?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  ledLights: boolean
+  acAuto?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  ledInterior: boolean
+  ledLights?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  keyless: boolean
+  ledInterior?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  aluRims: boolean
+  keyless?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  exchange: boolean
+  aluRims?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  leasing: boolean
+  exchange?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  camera: boolean
+  leasing?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  firstOwner: boolean
+  camera?: boolean
   @ApiPropertyOptional()
   @IsBoolean()
   @Type(() => Boolean)
   @IsOptional()
-  isShop: boolean
+  firstOwner?: boolean
+  @ApiPropertyOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  @IsOptional()
+  isShop?: boolean
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  q: string
+  q?: string
 }
 
 @UseGuards(ApiKeyAuthGuard)
