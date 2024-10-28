@@ -193,7 +193,7 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
                 ? extractCylinder(postInfo.detail?.cylinder)
                 : null,
               color: mapColor(postInfo.detail?.color),
-              gearbox: mapGearbox(postInfo.detail?.gearbox),
+              gearbox: mapGearbox(postInfo.detail?.gearbox, titleDescription),
               interiorType: mapInteriorType(titleDescription),
               interiorColor: null,
               transmission: mapTransmission(titleDescription),
@@ -220,7 +220,14 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
                 'ambian',
                 'lumier'
               ]),
-              keyless: stringContains(titleDescription, ['keyles', 'cle']),
+              keyless: stringContains(titleDescription, [
+                'key',
+                'sans cle',
+                'acces cle',
+                'access cle',
+                'cle access',
+                'cle intelligente'
+              ]),
               aluRims: stringContains(titleDescription, ['jant', 'alu']),
               warranty: stringContains(titleDescription, ['garantie']),
               camera: stringContains(titleDescription, ['camera']),

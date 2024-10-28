@@ -87,9 +87,9 @@ export interface FindCarPostsQuery extends Query {
   make?: string
   model?: string
   regionIds?: string[]
-  fuel?: Fuel
-  color?: Color
-  interiorType?: InteriorType
+  fuel?: Fuel[]
+  color?: Color[]
+  interiorType?: InteriorType[]
   transmission?: Transmission
   maxPrice?: number
   maxKm?: number
@@ -139,10 +139,15 @@ export class FindCarPostsQueryHandler extends QueryHandler<
     if (query.model) filters.push({ model: query.model })
     if (query.regionIds)
       filters.push({ [Op.or]: query.regionIds.map(regionId => ({ regionId })) })
-    if (query.fuel) filters.push({ fuel: query.fuel })
-    if (query.color) filters.push({ color: query.color })
+    if (query.fuel)
+      filters.push({ [Op.or]: query.fuel.map(fuel => ({ fuel })) })
+    if (query.color)
+      filters.push({ [Op.or]: query.color.map(color => ({ color })) })
     if (query.isAuto) filters.push({ gearbox: Gearbox.AUTO })
-    if (query.interiorType) filters.push({ interiorType: query.interiorType })
+    if (query.interiorType)
+      filters.push({
+        [Op.or]: query.interiorType.map(interiorType => ({ interiorType }))
+      })
     if (query.transmission) filters.push({ transmission: query.transmission })
     if (query.sunroof) filters.push({ sunroof: query.sunroof })
     if (query.carPlay) filters.push({ carPlay: true })

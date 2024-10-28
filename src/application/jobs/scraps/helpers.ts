@@ -245,7 +245,10 @@ export function mapTransmission(description: string): Transmission | null {
   return null
 }
 
-export function mapGearbox(gearbox: string | null | undefined): Gearbox | null {
+export function mapGearbox(
+  gearbox: string | null | undefined,
+  titleDescription: string
+): Gearbox | null {
   const cleaned = cleanStringOrNull(gearbox)
 
   switch (cleaned) {
@@ -254,6 +257,8 @@ export function mapGearbox(gearbox: string | null | undefined): Gearbox | null {
     case 'Manuelle':
       return Gearbox.MANUAL
     default:
+      if (stringContains(titleDescription, ['bva', 'boite auto']))
+        return Gearbox.AUTO
       return null
   }
 }
@@ -299,17 +304,27 @@ export function mapFuel(fuel: string | null | undefined): Fuel | null {
 
   switch (cleaned) {
     case 'Essence':
+    case 'essence':
+    case 'petrole':
+    case 'petrol':
+    case 'Petrole':
+    case 'Petrol':
+    case 'gasoline':
+    case 'Gasoline':
       return Fuel.ESSENCE
+    case 'diesel':
     case 'Diesel':
       return Fuel.DIESEL
+    case 'hybrid':
+    case 'Hybrid':
     case 'Hybride':
-      return Fuel.HYBRID
     case 'Hybride Diesel':
-      return Fuel.DIESEL_HYBRID
     case 'Hybride Essence':
-      return Fuel.ESSENCE_HYBRID
+    case 'electric':
+    case 'Electric':
+    case 'electrique':
     case 'Electrique':
-      return Fuel.ELECTRIQUE
+      return Fuel.HYBRID
     default:
       return null
   }

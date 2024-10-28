@@ -16,6 +16,7 @@ import {
 } from '@nestjs/swagger'
 import { Transform, TransformFnParams, Type } from 'class-transformer'
 import {
+  ArrayNotEmpty,
   IsArray,
   IsBoolean,
   IsEnum,
@@ -74,25 +75,29 @@ class FindCarPostsQP {
   @IsOptional()
   @Transform(params => transformStringToArray(params, 'regionIds'))
   @IsArray()
+  @ArrayNotEmpty()
   regionIds?: string[]
   @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
-  @IsEnum(Fuel)
+  @IsArray()
+  @ArrayNotEmpty()
+  @Transform(params => transformStringToArray(params, 'fuel'))
+  @IsEnum(Fuel, { each: true })
   @IsOptional()
-  fuel?: Fuel
+  fuel?: Fuel[]
   @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
-  @IsEnum(Color)
+  @IsArray()
+  @ArrayNotEmpty()
+  @Transform(params => transformStringToArray(params, 'color'))
+  @IsEnum(Color, { each: true })
   @IsOptional()
-  color?: Color
+  color?: Color[]
   @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
-  @IsEnum(InteriorType)
+  @IsArray()
+  @ArrayNotEmpty()
+  @Transform(params => transformStringToArray(params, 'interiorType'))
+  @IsEnum(InteriorType, { each: true })
   @IsOptional()
-  interiorType?: InteriorType
+  interiorType?: InteriorType[]
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
@@ -233,7 +238,6 @@ export class CarPostsController {
 
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
   @Get('/')
-  @Header('Cache-Control', 'max-age=60')
   @ApiResponse({
     type: CarPostListItemQueryModel,
     isArray: true
@@ -248,7 +252,7 @@ export class CarPostsController {
   }
   @SetMetadata(METADATA_IDENTIFIER_API_KEY_ACCESS_LEVEL, ApiKeyAccessLevel.USER)
   @Get('/:carPostId')
-  @Header('Cache-Control', 'max-age=3600')
+  @Header('Cache-Control', 'max-age=360')
   @ApiResponse({
     type: CarPostListItemQueryModel,
     isArray: true
