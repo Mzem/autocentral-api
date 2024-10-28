@@ -148,6 +148,7 @@ export class FindCarPostsQueryHandler extends QueryHandler<
     if (query.carPlay) filters.push({ carPlay: true })
     if (query.bluetooth) filters.push({ bluetooth: true })
     if (query.alarm) filters.push({ alarm: true })
+    if (query.keyless) filters.push({ keyless: true })
     if (query.acAuto) filters.push({ acAuto: true })
     if (query.ledLights) filters.push({ ledLights: true })
     if (query.ledInterior) filters.push({ ledInterior: true })
