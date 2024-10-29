@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
-import { Op, Sequelize, WhereOptions } from 'sequelize'
+import { Op, OrderItem, Sequelize, WhereOptions } from 'sequelize'
 import { Fuel, Gearbox, Transmission } from '../../domain/car-model'
 import { Color, InteriorType } from '../../domain/car-post'
 import { CarPostSqlModel } from '../../infrastructure/sequelize/models/car-post.sql-model'
@@ -15,6 +15,15 @@ import { MerchantSqlModel } from '../../infrastructure/sequelize/models/merchant
 import { SequelizeInjectionToken } from '../../infrastructure/sequelize/providers'
 
 const MAX_PAGE_SIZE = 20
+
+export enum FindCarPostsTri {
+  PRIX_ASC = 'PRIX_ASC',
+  PRIX_DESC = 'PRIX_DESC'
+}
+const mapTri: Record<FindCarPostsTri, OrderItem> = {
+  PRIX_ASC: ['price', 'ASC'],
+  PRIX_DESC: ['price', 'DESC']
+}
 
 export class CarPostListItemQueryModel {
   @ApiProperty()
@@ -115,6 +124,7 @@ export interface FindCarPostsQuery extends Query {
   firstOwner?: boolean
   isShop?: boolean
   q?: string
+  tri?: FindCarPostsTri
 }
 
 @Injectable()
@@ -222,7 +232,7 @@ export class FindCarPostsQueryHandler extends QueryHandler<
     const whereShop = query.isShop ? { where: { isShop: true } } : {}
 
     const postsSQL = await CarPostSqlModel.findAll({
-      order: [['published_at', 'DESC']],
+      order: [query.tri ? mapTri[query.tri] : ['published_at', 'DESC']],
       limit: MAX_PAGE_SIZE,
       offset: (query.page - 1) * MAX_PAGE_SIZE,
       where: {

@@ -28,7 +28,8 @@ import {
 } from 'class-validator'
 import {
   CarPostListItemQueryModel,
-  FindCarPostsQueryHandler
+  FindCarPostsQueryHandler,
+  FindCarPostsTri
 } from '../../application/queries/find-car-posts.query.handler.db'
 import {
   CarPostQueryModel,
@@ -224,6 +225,12 @@ class FindCarPostsQP {
   @IsNotEmpty()
   @IsOptional()
   q?: string
+  @ApiPropertyOptional()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  @IsEnum(FindCarPostsTri)
+  tri?: FindCarPostsTri
 }
 
 @UseGuards(ApiKeyAuthGuard)
