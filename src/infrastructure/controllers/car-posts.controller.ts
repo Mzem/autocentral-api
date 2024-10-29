@@ -114,6 +114,16 @@ class FindCarPostsQP {
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
+  minPrice?: number
+  @ApiPropertyOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  minKm?: number
+  @ApiPropertyOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
   maxKm?: number
   @ApiPropertyOptional()
   @IsNumber()

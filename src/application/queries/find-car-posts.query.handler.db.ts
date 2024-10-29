@@ -100,7 +100,9 @@ export interface FindCarPostsQuery extends Query {
   color?: Color[]
   interiorType?: InteriorType[]
   transmission?: Transmission
+  minPrice?: number
   maxPrice?: number
+  minKm?: number
   maxKm?: number
   minYear?: number
   maxYear?: number
@@ -172,6 +174,12 @@ export class FindCarPostsQueryHandler extends QueryHandler<
     if (query.leasing) filters.push({ leasing: true })
     if (query.camera) filters.push({ camera: true })
     if (query.firstOwner) filters.push({ firstOwner: true })
+    if (query.minPrice)
+      filters.push({
+        price: {
+          [Op.gte]: query.minPrice
+        }
+      })
     if (query.maxPrice)
       filters.push({
         price: {
@@ -188,6 +196,12 @@ export class FindCarPostsQueryHandler extends QueryHandler<
       filters.push({
         year: {
           [Op.lte]: query.maxYear
+        }
+      })
+    if (query.minKm)
+      filters.push({
+        km: {
+          [Op.gte]: query.minKm
         }
       })
     if (query.maxKm)
