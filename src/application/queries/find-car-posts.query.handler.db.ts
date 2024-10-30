@@ -44,8 +44,8 @@ export class CarPostListItemQueryModel {
   @ApiProperty()
   merchant: MerchantListItemQueryModel
 
-  @ApiProperty({ required: false })
-  phone: number | undefined
+  @ApiProperty()
+  phone: string
 
   @ApiProperty({ required: false })
   title: string | undefined
@@ -267,6 +267,7 @@ export class FindCarPostsQueryHandler extends QueryHandler<
 
     return success(
       postsSQL
+        .filter(postSQL => postSQL.phoneNumbers.length > 0)
         .map(postSQL => ({
           id: postSQL.id,
           source: postSQL.source,
@@ -283,7 +284,7 @@ export class FindCarPostsQueryHandler extends QueryHandler<
             avatar: postSQL.merchant!.avatar ?? undefined,
             isShop: postSQL.merchant!.isShop
           },
-          phone: postSQL.phoneNumbers[0],
+          phone: '+216' + postSQL.phoneNumbers[0],
           title: postSQL.title ?? undefined,
           image: postSQL.images[0],
           price: postSQL.price ?? undefined,

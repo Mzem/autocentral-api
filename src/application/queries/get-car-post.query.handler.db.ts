@@ -44,7 +44,7 @@ export class CarPostQueryModel {
   carEngine: CarModelDetailQueryModel | undefined
 
   @ApiProperty({ required: false })
-  phone: number | undefined
+  phone: string | undefined
 
   @ApiProperty({ required: false })
   title: string | undefined
@@ -191,7 +191,7 @@ export class GetCarPostQueryHandler extends QueryHandler<
       carEngine: postSQL.carEngine
         ? fromEngineSqlToQueryModel(postSQL.carEngine)
         : undefined,
-      phone: postSQL.phoneNumbers[0],
+      phone: '+216' + postSQL.phoneNumbers[0],
       title: postSQL.title ?? undefined,
       description: postSQL.description ?? undefined,
       images: postSQL.images,
