@@ -348,5 +348,5 @@ export function mapPhoneNumber(
   if (potentialPhoneNumber.length !== 8 || isNaN(Number(potentialPhoneNumber)))
     return null
 
-  return Number(potentialPhoneNumber)
+  return Number('00216' + potentialPhoneNumber)
 }
