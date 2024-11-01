@@ -39,6 +39,7 @@
     "tasks:scrap-brperf": "TASK_NAME=SCRAP_BRPERF node dist/main",
     "tasks:scrap-shiftech": "TASK_NAME=SCRAP_SHIFTECH node dist/main",
     "tasks:scrap-tayara": "TASK_NAME=SCRAP_TAYARA node dist/main",
+    "tasks:scrap-automobiletn": "TASK_NAME=SCRAP_AUTOMOBILETN node dist/main",
     "tasks:update-car-engines-brperf": "TASK_NAME=UPDATE_CAR_ENGINES_BRPERF node dist/main",
     "tasks:update-car-engines-shiftech": "TASK_NAME=UPDATE_CAR_ENGINES_SHIFTECH node dist/main"
   },

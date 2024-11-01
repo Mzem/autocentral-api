@@ -9,7 +9,7 @@ import {
 } from '../../infrastructure/sequelize/models/car-engine.sql-model'
 import { AsSql } from '../../infrastructure/sequelize/types'
 import { DateService } from '../../utils/date.service'
-import { cleanString, fromNameToId } from '../helpers'
+import { cleanString, fromNameToId, fromStringToNumber } from '../helpers'
 import { Job } from '../types/job'
 import { JobHandler } from '../types/job-handler'
 import { BRPerfScrapedData } from './scraps/scrap-brperf.job.handler'
@@ -116,6 +116,30 @@ export class UpdateCarEnginesBRPerfJobHandler extends JobHandler<Job> {
 export function extractCylinder(inputString: string): string | null {
   const match = inputString.match(/\d\.\d/)
   return match ? match[0] : null
+}
+
+export function extractCylinderFromDisplacement(
+  inputString?: string
+): string | null {
+  if (!inputString) return null
+
+  const nbDisp = fromStringToNumber(inputString.substring(0, 4))
+
+  if (isNaN(nbDisp)) {
+    throw new Error('Invalid displacement number format.')
+  }
+
+  if (nbDisp.toString().length !== 4 && nbDisp.toString().length !== 3) {
+    throw new Error('Invalid displacement length format.')
+  }
+
+  const final = Math.round(nbDisp / 100)
+
+  if (nbDisp >= 901) {
+    return `${final.toString().charAt(0)}.${final.toString().charAt(1)}`
+  } else {
+    return `0.${final.toString().charAt(0)}`
+  }
 }
 
 function extractHP(inputString: string | null): number | null {

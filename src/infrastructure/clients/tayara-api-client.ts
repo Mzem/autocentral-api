@@ -94,7 +94,7 @@ export namespace Tayara {
     title: string
     images: string[]
     description: string
-    price: string
+    price?: string
     phone: string
     location: {
       delegation: string
@@ -238,7 +238,7 @@ export class TayaraApiClient {
         return postDetail
       }
     } catch (error) {
-      this.logger.error('Error getPostDetail:', error)
+      this.logger.error('Error getPostDetail: ' + error)
     }
     return undefined
   }

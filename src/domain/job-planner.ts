@@ -38,6 +38,7 @@ export namespace JobPlanner {
     SCRAP_BRPERF = 'SCRAP_BRPERF',
     SCRAP_SHIFTECH = 'SCRAP_SHIFTECH',
     SCRAP_TAYARA = 'SCRAP_TAYARA',
+    SCRAP_AUTOMOBILETN = 'SCRAP_AUTOMOBILETN',
     UPDATE_CAR_ENGINES_BRPERF = 'UPDATE_CAR_ENGINES_BRPERF',
     UPDATE_CAR_ENGINES_SHIFTECH = 'UPDATE_CAR_ENGINES_SHIFTECH',
     CLEAN_CAR_POSTS = 'CLEAN_CAR_POSTS'
@@ -92,6 +93,11 @@ export const cronJobList: JobPlanner.CronJob[] = [
     type: JobPlanner.JobType.SCRAP_TAYARA,
     expression: '*/15 * * * *',
     description: 'Every 15th minute'
+  },
+  {
+    type: JobPlanner.JobType.SCRAP_AUTOMOBILETN,
+    expression: '7,18,38,53 * * * *',
+    description: 'Specific'
   },
   {
     type: JobPlanner.JobType.CLEAN_CAR_POSTS,

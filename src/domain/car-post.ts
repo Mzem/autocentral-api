@@ -32,6 +32,6 @@ export enum BodyType {
 }
 
 export enum Source {
-  TAYARA = 'Tayara.tn',
-  AUTOMOBILETN = 'Automobile.tn'
+  TAYARA = 'tayara.tn',
+  AUTOMOBILETN = 'automobile.tn'
 }

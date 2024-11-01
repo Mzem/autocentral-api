@@ -43,7 +43,7 @@ export function cleanString(string: string): string {
 export function cleanStringOrNull(
   string: string | undefined | null
 ): string | null {
-  return string?.toString().replace(/\s+/g, ' ').trim() || null
+  return string ? cleanString(string) : null
 }
 
 export function capitalize(input: string): string {
@@ -94,7 +94,7 @@ export function sortByStringField<T extends Record<string, any>>(
 }
 
 export function stringContains(
-  string: string,
+  string: string = '',
   containedList: string[]
 ): boolean {
   for (const containedOne of containedList) {

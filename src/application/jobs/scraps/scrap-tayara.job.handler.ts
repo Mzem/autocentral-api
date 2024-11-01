@@ -181,6 +181,8 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               make: cleanStringOrNull(postInfo.detail?.make),
               model: cleanStringOrNull(postInfo.detail?.model),
               body: mapBody(titleDescription, postInfo.detail?.body),
+              variant: null,
+              type: null,
               year,
               km,
               fuel: mapFuel(postInfo.detail?.fuel),
@@ -243,7 +245,13 @@ export class ScrapTayaraJobHandler extends JobHandler<Job> {
               ]),
               carEngineId: null,
               isFeatured: false,
-              isExpired: false
+              isExpired: false,
+              fcr: stringContains(titleDescription, ['fcr']),
+              newURL: null,
+              newPrice: null,
+              estimatedPrice: null,
+              thumbnail: null,
+              options: null
             }
 
             const potentialCarEngineId = await this.findCarEngineId(

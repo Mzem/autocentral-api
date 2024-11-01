@@ -72,6 +72,12 @@ export class CarPostDto extends Model {
   @Column({ field: 'body', type: DataType.STRING })
   body: BodyType | null
 
+  @Column({ field: 'variant', type: DataType.STRING })
+  variant: string | null
+
+  @Column({ field: 'type', type: DataType.STRING })
+  type: string | null
+
   @Column({ field: 'year', type: DataType.INTEGER })
   year: number | null
 
@@ -144,6 +150,9 @@ export class CarPostDto extends Model {
   @Column({ field: 'leasing', type: DataType.BOOLEAN })
   leasing: boolean | null
 
+  @Column({ field: 'fcr', type: DataType.BOOLEAN })
+  fcr: boolean | null
+
   @Column({ field: 'camera', type: DataType.BOOLEAN })
   camera: boolean | null
 
@@ -155,6 +164,21 @@ export class CarPostDto extends Model {
 
   @Column({ field: 'is_expired', type: DataType.BOOLEAN })
   isExpired: boolean
+
+  @Column({ field: 'new_url', type: DataType.STRING })
+  newURL: string | null
+
+  @Column({ field: 'new_price', type: DataType.INTEGER })
+  newPrice: number | null
+
+  @Column({ field: 'estimated_price', type: DataType.INTEGER })
+  estimatedPrice: number | null
+
+  @Column({ field: 'thumbnail', type: DataType.STRING })
+  thumbnail: string | null
+
+  @Column({ field: 'options', type: DataType.ARRAY(DataType.STRING) })
+  options: string[] | null
 }
 
 @Table({ timestamps: false, tableName: 'car_post' })

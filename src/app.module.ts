@@ -51,6 +51,8 @@ import { CleanCarPostsJobHandler } from './application/jobs/clean-car-posts.job.
 import { CarPostsController } from './infrastructure/controllers/car-posts.controller'
 import { FindCarPostsQueryHandler } from './application/queries/find-car-posts.query.handler.db'
 import { GetCarPostQueryHandler } from './application/queries/get-car-post.query.handler.db'
+import { ScrapAutomobiletnJobHandler } from './application/jobs/scraps/scrap-automobiletn.job.handler'
+import { AutomobiletnApiClient } from './infrastructure/clients/automobiletn-api-client'
 
 export const buildModuleMetadata = (): ModuleMetadata => ({
   imports: [
@@ -81,6 +83,7 @@ export const buildModuleMetadata = (): ModuleMetadata => ({
     FirebaseClient,
     ShiftechApiClient,
     TayaraApiClient,
+    AutomobiletnApiClient,
     ApiKeyAuthGuard,
     {
       provide: JobPlannerRepositoryToken,
@@ -124,6 +127,7 @@ export const JobHandlerProviders = [
   ScrapBRPerfJobHandler,
   ScrapShiftechJobHandler,
   ScrapTayaraJobHandler,
+  ScrapAutomobiletnJobHandler,
   CleanCarPostsJobHandler
 ]
 

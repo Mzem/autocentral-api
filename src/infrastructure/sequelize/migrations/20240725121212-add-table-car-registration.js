@@ -3,6 +3,9 @@ module.exports = {
     await queryInterface.sequelize.transaction(
       { isolationLevel: Sequelize.Transaction.SERIALIZABLE },
       async transaction => {
+        await queryInterface.sequelize.query(
+          `CREATE EXTENSION IF NOT EXISTS "pg_trgm"`
+        )
         await queryInterface.createTable(
           'car_registration',
           {

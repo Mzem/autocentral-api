@@ -11,7 +11,7 @@ export function generateId(
   postId: string,
   source: 'TAYARA' | 'AUTOMOBILETN'
 ): string {
-  return `${source}-${postId}`
+  return `${source}-${postId.replace(/[^\w\s]/g, '-')}`
 }
 
 export function isPostIgnored(
@@ -110,7 +110,9 @@ export function mapInteriorType(description: string): InteriorType | null {
   return null
 }
 
-export function mapPrice(price: string): number | null {
+export function mapPrice(price?: string): number | null {
+  if (!price) return null
+
   const sanitized = fromStringToNumber(price)
   if (
     sanitized === 0 ||
@@ -165,14 +167,31 @@ export function mapKm(
   return sanitizedKm
 }
 
+export function mapMake(make?: string): string | null {
+  if (!make) return null
+  const cleaned = cleanString(make)
+  return cleaned
+    .replace('Mercedes-Benz', 'Mercedes')
+    .replace('mercedes-benz', 'Mercedes')
+    .replace('Mercedes-benz', 'Mercedes')
+    .replace('mercedes-Benz', 'Mercedes')
+    .replace('MERCEDES-BENZ', 'Mercedes')
+    .replace('LandRover', 'Land Rover')
+    .replace('Landrover', 'Land Rover')
+    .replace('landrover', 'Land Rover')
+}
+
 export function mapBody(
   titleDescription: string,
   body?: string | null
 ): BodyType | null {
   if (!body) return null
 
+  const whereToSearch = cleanString(titleDescription) + ' ' + cleanString(body)
+
   if (
-    stringContains(titleDescription, [
+    stringContains(whereToSearch, [
+      'utilitaire',
       'partnair',
       'partner',
       'partenair',
@@ -187,39 +206,45 @@ export function mapBody(
   )
     return BodyType.UTILITY
 
-  if (stringContains(titleDescription, ['van', 'hicace', 'scenic']))
+  if (stringContains(whereToSearch, ['van', 'hicace', 'scenic', 'monospace']))
     return BodyType.MONOSPACE_VAN
 
-  if (stringContains(titleDescription, ['coupe'])) return BodyType.COUPE
+  if (stringContains(whereToSearch, ['coupe'])) return BodyType.COUPE
 
-  if (stringContains(titleDescription, ['roadster', 'cabrio', 'decapo']))
+  if (stringContains(whereToSearch, ['roadster', 'cabrio', 'decapo']))
     return BodyType.CABRIOLET
 
-  if (stringContains(titleDescription, ['break'])) return BodyType.BREAK
+  if (stringContains(whereToSearch, ['break', 'rs6'])) return BodyType.BREAK
 
   if (
-    stringContains(titleDescription, ['polo', 'ibiza', 'golf', 'leon', 'rio'])
+    stringContains(whereToSearch, [
+      'compacte',
+      'polo',
+      'ibiza',
+      'golf',
+      'leon',
+      'rio',
+      'kuv'
+    ])
   )
     return BodyType.COMPACT
 
-  const sanitized = cleanString(body)
+  if (stringContains(whereToSearch, ['berline', 'e200']))
+    return BodyType.BERLINE
+  if (
+    stringContains(whereToSearch, [
+      'suv',
+      '4x4',
+      'touareg',
+      'cayenne',
+      'tiguan',
+      'macan',
+      'sportage'
+    ])
+  )
+    return BodyType.SUV
+  if (stringContains(whereToSearch, ['pick'])) return BodyType.PICKUP
 
-  switch (sanitized) {
-    case 'Compacte':
-      return BodyType.COMPACT
-    case 'Berline':
-      return BodyType.BERLINE
-    case 'Cabriolet':
-      return BodyType.CABRIOLET
-    case '4 x 4':
-      return BodyType.SUV
-    case 'Monospace':
-      return BodyType.MONOSPACE_VAN
-    case 'Utilitaire':
-      return BodyType.UTILITY
-    case 'Pick up':
-      return BodyType.PICKUP
-  }
   return null
 }
 
@@ -242,6 +267,8 @@ export function mapTransmission(description: string): Transmission | null {
     ])
   )
     return Transmission.AWD
+  if (stringContains(description, ['tract'])) return Transmission.FWD
+  if (stringContains(description, ['prop'])) return Transmission.RWD
   return null
 }
 
@@ -265,69 +292,32 @@ export function mapGearbox(
 
 export function mapColor(color: string | null | undefined): Color | null {
   const cleaned = cleanStringOrNull(color)
+  if (!cleaned) return null
 
-  switch (cleaned) {
-    case 'Argent':
-    case 'Gris':
-      return Color.GREY
-    case 'Beige':
-    case 'Camel':
-    case 'Doré':
-    case 'Marron':
-      return Color.BROWN
-    case 'Blanc':
-      return Color.WHITE
-    case 'Bleu':
-    case 'Corail':
-      return Color.BLUE
-    case 'Jaune':
-      return Color.YELLOW
-    case 'Noir':
-      return Color.BLACK
-    case 'Orange':
-      return Color.ORANGE
-    case 'Rose':
-      return Color.PINK
-    case 'Rouge':
-      return Color.RED
-    case 'Vert':
-      return Color.GREEN
-    case 'Violet':
-      return Color.PURPLE
-    default:
-      return null
-  }
+  if (stringContains(cleaned, ['blanc', 'white'])) return Color.WHITE
+  if (stringContains(cleaned, ['noir', 'black'])) return Color.BLACK
+  if (stringContains(cleaned, ['bleu', 'blu', 'turq'])) return Color.BLUE
+  if (stringContains(cleaned, ['vert', 'green'])) return Color.GREEN
+  if (stringContains(cleaned, ['jaun'])) return Color.YELLOW
+  if (stringContains(cleaned, ['rouge', 'rose', 'viole', 'indig', 'red']))
+    return Color.RED
+  if (stringContains(cleaned, ['argent', 'gris', 'nardo', 'chrom']))
+    return Color.GREY
+  if (stringContains(cleaned, ['beige', 'crem', 'camel', 'or', 'mar']))
+    return Color.BROWN
+
+  return null
 }
 
 export function mapFuel(fuel: string | null | undefined): Fuel | null {
   const cleaned = cleanStringOrNull(fuel)
+  if (!cleaned) return null
 
-  switch (cleaned) {
-    case 'Essence':
-    case 'essence':
-    case 'petrole':
-    case 'petrol':
-    case 'Petrole':
-    case 'Petrol':
-    case 'gasoline':
-    case 'Gasoline':
-      return Fuel.ESSENCE
-    case 'diesel':
-    case 'Diesel':
-      return Fuel.DIESEL
-    case 'hybrid':
-    case 'Hybrid':
-    case 'Hybride':
-    case 'Hybride Diesel':
-    case 'Hybride Essence':
-    case 'electric':
-    case 'Electric':
-    case 'electrique':
-    case 'Electrique':
-      return Fuel.HYBRID
-    default:
-      return null
-  }
+  if (stringContains(cleaned, ['hybrid', 'electri'])) return Fuel.HYBRID
+  if (stringContains(cleaned, ['essence', 'gas', 'petro'])) return Fuel.ESSENCE
+  if (stringContains(cleaned, ['diesel'])) return Fuel.DIESEL
+
+  return null
 }
 
 export function mapYear(year: string | undefined | null): number | null {
